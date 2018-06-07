@@ -11,13 +11,14 @@ import MapKit
 
 class ViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var edit: UIBarButtonItem!
+    @IBOutlet weak var tapPinsLabel: UILabel!
+    var editingMode = false
     var annotationCount = 0
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         mapView.delegate = self
-        
         // MARK: Gesture recognizer to allow user to add pin when long pressed
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(addAnnotationOnLongPress(gesture:)))
         longPressGesture.minimumPressDuration = 0.5
@@ -28,9 +29,47 @@ class ViewController: UIViewController, MKMapViewDelegate {
         let UScenterCoordinate = CLLocationCoordinate2D(latitude: 39.8283, longitude: -98.5795)
         let region = MKCoordinateRegionMake(UScenterCoordinate, span)
         mapView.setRegion(region, animated: true)
+        
+        editButtonTitleChange()
+        
+        tapPinsLabel.isHidden = true
+        
     }
-
-   
+    
+    // MARK: Delete annotation when tap its pin
+    @IBAction func editAnnotationButton(_ sender: UIBarButtonItem) {
+        tapPinsLabel.isHidden = false
+        editButtonTitleChange()
+        if editingMode {
+            tapPinsLabel.fadeIn(duration: 0.5, delay: 0.0, completion: { (_) in
+                Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false, block: { (_) in
+                    self.tapPinsLabel.fadeOut()
+                })
+            })
+        } else {
+            tapPinsLabel.fadeOut()
+        }
+    }
+    
+    // MARK: Modify edit button title
+    func editButtonTitleChange() {
+        if edit.title == "Edit" {
+            edit.title = "Done"
+            editingMode = true
+        } else {
+            edit .title = "Edit"
+            editingMode = false
+        }
+    }
+    
+    func showAlert() {
+        let alert = UIAlertController(title: "Alert", message: "Wait Please!", preferredStyle: .alert)
+        present(alert, animated: true, completion: nil)
+        Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) { (_) in
+            alert.dismiss(animated: true, completion: nil)
+        }
+    }
+    
     @objc func addAnnotationOnLongPress(gesture: UILongPressGestureRecognizer) {
         if gesture.state == .began {
             annotationCount += 1
@@ -42,7 +81,6 @@ class ViewController: UIViewController, MKMapViewDelegate {
             mapView.addAnnotation(annotation)
             Annotaton.annotations.append(annotation)
             print("\(annotationCount)")
-            
         }
     }
     
@@ -57,5 +95,16 @@ class ViewController: UIViewController, MKMapViewDelegate {
         }
         return pinView
     }
+}
+
+// Mark: Make labels fade in/out
+extension UIView {
+    func fadeIn(duration: TimeInterval = 1.0, delay: TimeInterval = 0.0, completion: @escaping ((Bool) -> Void) = {(finished: Bool) -> Void in}) {
+        UIView.animate(withDuration: duration, delay: delay, options: UIViewAnimationOptions.curveEaseIn, animations: {self.alpha = 1.0}, completion: completion)
+    }
+    func fadeOut(duration: TimeInterval = 1.0, delay: TimeInterval = 0.0, completion: @escaping ((Bool) -> Void) = {(finished: Bool) -> Void in}) {
+        UIView.animate(withDuration: duration, delay: delay, options: UIViewAnimationOptions.curveEaseIn, animations: {self.alpha = 0.0}, completion: completion)
+    }
+
 }
 
