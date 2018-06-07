@@ -72,15 +72,27 @@ class ViewController: UIViewController, MKMapViewDelegate {
     
     @objc func addAnnotationOnLongPress(gesture: UILongPressGestureRecognizer) {
         if gesture.state == .began {
-            annotationCount += 1
+            
             let point = gesture.location(in: mapView)
             let coordinate = mapView.convert(point, toCoordinateFrom: mapView)
             print(coordinate)
+            if self.editingMode == false {
             let annotation = MKPointAnnotation()
             annotation.coordinate = coordinate
             mapView.addAnnotation(annotation)
             Annotaton.annotations.append(annotation)
             print("\(annotationCount)")
+            annotationCount += 1
+            }
+        }
+    }
+    
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        if editingMode {
+            self.mapView.removeAnnotation(view.annotation!)
+        
+//        self.mapView.removeAnnotation(Annotaton.annotations[annotationCount])
+//            Annotaton.annotations.remove(at: annotationCount)
         }
     }
     
