@@ -11,6 +11,7 @@ import MapKit
 
 class ViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet weak var mapView: MKMapView!
+    var annotationCount = 0
     
     
     override func viewDidLoad() {
@@ -21,20 +22,26 @@ class ViewController: UIViewController, MKMapViewDelegate {
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(addAnnotationOnLongPress(gesture:)))
         longPressGesture.minimumPressDuration = 0.5
         mapView.addGestureRecognizer(longPressGesture)
+        
+        // MARK: Set map region
+        let span = MKCoordinateSpanMake(18, 18)
+        let UScenterCoordinate = CLLocationCoordinate2D(latitude: 39.8283, longitude: -98.5795)
+        let region = MKCoordinateRegionMake(UScenterCoordinate, span)
+        mapView.setRegion(region, animated: true)
     }
 
-    var num = 0
+   
     @objc func addAnnotationOnLongPress(gesture: UILongPressGestureRecognizer) {
         if gesture.state == .began {
-            num += 1
-            let point = gesture.location(in: self.mapView)
-            let coordinate = self.mapView.convert(point, toCoordinateFrom: self.mapView)
+            annotationCount += 1
+            let point = gesture.location(in: mapView)
+            let coordinate = mapView.convert(point, toCoordinateFrom: mapView)
             print(coordinate)
             let annotation = MKPointAnnotation()
             annotation.coordinate = coordinate
-            self.mapView.addAnnotation(annotation)
+            mapView.addAnnotation(annotation)
             Annotaton.annotations.append(annotation)
-            print("\(num)")
+            print("\(annotationCount)")
             
         }
     }
@@ -44,9 +51,7 @@ class ViewController: UIViewController, MKMapViewDelegate {
         var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
         if pinView == nil {
             pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
-            pinView!.canShowCallout = true
             pinView?.animatesDrop = true
-            pinView!.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
         } else {
             pinView!.annotation = annotation
         }
