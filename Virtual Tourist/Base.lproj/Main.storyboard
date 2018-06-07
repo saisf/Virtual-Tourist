@@ -34,6 +34,9 @@
                     <navigationItem key="navigationItem" title="Virtual Tourist" id="JUx-ED-lRq">
                         <barButtonItem key="rightBarButtonItem" systemItem="edit" id="iJz-fy-0hN"/>
                     </navigationItem>
+                    <connections>
+                        <outlet property="mapView" destination="yRK-2L-TLH" id="mee-aS-fvY"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
