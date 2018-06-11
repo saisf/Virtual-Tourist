@@ -55,9 +55,11 @@ class ViewController: UIViewController, MKMapViewDelegate {
     func editButtonTitleChange() {
         if edit.title == "Edit" {
             edit.title = "Done"
+            edit.tintColor = .red
             editingMode = true
         } else {
             edit .title = "Edit"
+            edit.tintColor = UIColor(red: 0.0, green: 122/255, blue: 1.0, alpha: 1)
             editingMode = false
         }
     }
@@ -90,9 +92,8 @@ class ViewController: UIViewController, MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         if editingMode {
             self.mapView.removeAnnotation(view.annotation!)
-        
-//        self.mapView.removeAnnotation(Annotaton.annotations[annotationCount])
-//            Annotaton.annotations.remove(at: annotationCount)
+        } else {
+            performSegue(withIdentifier: "ToCollectionViewController", sender: nil)
         }
     }
     
