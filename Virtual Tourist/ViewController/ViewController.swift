@@ -93,6 +93,10 @@ class ViewController: UIViewController, MKMapViewDelegate {
         if editingMode {
             self.mapView.removeAnnotation(view.annotation!)
         } else {
+            guard let latitude = view.annotation?.coordinate.latitude else {return}
+            guard let longitude = view.annotation?.coordinate.longitude else {return}
+            DestinationInformation.latitude = latitude
+            DestinationInformation.longitude = longitude
             performSegue(withIdentifier: "ToCollectionViewController", sender: nil)
         }
     }

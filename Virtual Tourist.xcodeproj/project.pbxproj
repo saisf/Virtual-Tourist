@@ -15,6 +15,7 @@
 		EC5901E720C9A64800CA3388 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EC5901E520C9A64800CA3388 /* LaunchScreen.storyboard */; };
 		EC5901EF20C9B00200CA3388 /* Annotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC5901EE20C9B00200CA3388 /* Annotation.swift */; };
 		EC5901F620CF160E00CA3388 /* CollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC5901F520CF160E00CA3388 /* CollectionViewController.swift */; };
+		EC5901F920CF179D00CA3388 /* DestinationInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC5901F820CF179D00CA3388 /* DestinationInformation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		EC5901E820C9A64800CA3388 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EC5901EE20C9B00200CA3388 /* Annotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Annotation.swift; sourceTree = "<group>"; };
 		EC5901F520CF160E00CA3388 /* CollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewController.swift; sourceTree = "<group>"; };
+		EC5901F820CF179D00CA3388 /* DestinationInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationInformation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +87,7 @@
 		EC5901F720CF16F800CA3388 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				EC5901F820CF179D00CA3388 /* DestinationInformation.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -162,6 +165,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EC5901DC20C9A64800CA3388 /* ViewController.swift in Sources */,
+				EC5901F920CF179D00CA3388 /* DestinationInformation.swift in Sources */,
 				EC5901E220C9A64800CA3388 /* Virtual_Tourist.xcdatamodeld in Sources */,
 				EC5901EF20C9B00200CA3388 /* Annotation.swift in Sources */,
 				EC5901DA20C9A64800CA3388 /* AppDelegate.swift in Sources */,
