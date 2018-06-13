@@ -16,6 +16,10 @@
 		EC5901EF20C9B00200CA3388 /* Annotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC5901EE20C9B00200CA3388 /* Annotation.swift */; };
 		EC5901F620CF160E00CA3388 /* CollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC5901F520CF160E00CA3388 /* CollectionViewController.swift */; };
 		EC5901F920CF179D00CA3388 /* DestinationInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC5901F820CF179D00CA3388 /* DestinationInformation.swift */; };
+		EC5901FB20CF267400CA3388 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC5901FA20CF267400CA3388 /* APIClient.swift */; };
+		EC5901FD20CF2E3D00CA3388 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC5901FC20CF2E3D00CA3388 /* Constants.swift */; };
+		EC5901FF20D0704400CA3388 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC5901FE20D0704400CA3388 /* Data.swift */; };
+		EC59020120D0765600CA3388 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC59020020D0765600CA3388 /* UserManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +34,10 @@
 		EC5901EE20C9B00200CA3388 /* Annotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Annotation.swift; sourceTree = "<group>"; };
 		EC5901F520CF160E00CA3388 /* CollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewController.swift; sourceTree = "<group>"; };
 		EC5901F820CF179D00CA3388 /* DestinationInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationInformation.swift; sourceTree = "<group>"; };
+		EC5901FA20CF267400CA3388 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
+		EC5901FC20CF2E3D00CA3388 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		EC5901FE20D0704400CA3388 /* Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
+		EC59020020D0765600CA3388 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,7 +78,6 @@
 				EC5901E520C9A64800CA3388 /* LaunchScreen.storyboard */,
 				EC5901E820C9A64800CA3388 /* Info.plist */,
 				EC5901E020C9A64800CA3388 /* Virtual_Tourist.xcdatamodeld */,
-				EC5901EE20C9B00200CA3388 /* Annotation.swift */,
 			);
 			path = "Virtual Tourist";
 			sourceTree = "<group>";
@@ -88,6 +95,11 @@
 			isa = PBXGroup;
 			children = (
 				EC5901F820CF179D00CA3388 /* DestinationInformation.swift */,
+				EC5901EE20C9B00200CA3388 /* Annotation.swift */,
+				EC5901FA20CF267400CA3388 /* APIClient.swift */,
+				EC5901FC20CF2E3D00CA3388 /* Constants.swift */,
+				EC5901FE20D0704400CA3388 /* Data.swift */,
+				EC59020020D0765600CA3388 /* UserManager.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -165,11 +177,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				EC5901DC20C9A64800CA3388 /* ViewController.swift in Sources */,
+				EC5901FB20CF267400CA3388 /* APIClient.swift in Sources */,
 				EC5901F920CF179D00CA3388 /* DestinationInformation.swift in Sources */,
 				EC5901E220C9A64800CA3388 /* Virtual_Tourist.xcdatamodeld in Sources */,
 				EC5901EF20C9B00200CA3388 /* Annotation.swift in Sources */,
 				EC5901DA20C9A64800CA3388 /* AppDelegate.swift in Sources */,
 				EC5901F620CF160E00CA3388 /* CollectionViewController.swift in Sources */,
+				EC5901FF20D0704400CA3388 /* Data.swift in Sources */,
+				EC59020120D0765600CA3388 /* UserManager.swift in Sources */,
+				EC5901FD20CF2E3D00CA3388 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

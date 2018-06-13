@@ -16,6 +16,10 @@ class CollectionViewController: UIViewController, MKMapViewDelegate {
         super.viewDidLoad()
         mapView.delegate = self
         
+        // Disable user map interaction
+        mapView.isUserInteractionEnabled = false
+        
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -30,6 +34,8 @@ class CollectionViewController: UIViewController, MKMapViewDelegate {
         let UScenterCoordinate = CLLocationCoordinate2D(latitude: DestinationInformation.latitude, longitude: DestinationInformation.longitude)
         let region = MKCoordinateRegionMake(UScenterCoordinate, span)
         mapView.setRegion(region, animated: true)
+        
+        APIClient.sharedInstance.searchByLatLong()
     }
 
     override func didReceiveMemoryWarning() {
