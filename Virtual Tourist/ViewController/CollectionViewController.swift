@@ -9,12 +9,16 @@
 import UIKit
 import MapKit
 
-class CollectionViewController: UIViewController, MKMapViewDelegate {
+class CollectionViewController: UIViewController, MKMapViewDelegate, UICollectionViewDataSource,UICollectionViewDelegate {
+    
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var collectionView: UICollectionView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         mapView.delegate = self
+        collectionView.dataSource = self
+        collectionView.delegate = self
         
         // Disable user map interaction
         mapView.isUserInteractionEnabled = false
@@ -35,7 +39,44 @@ class CollectionViewController: UIViewController, MKMapViewDelegate {
         let region = MKCoordinateRegionMake(UScenterCoordinate, span)
         mapView.setRegion(region, animated: true)
         
-        APIClient.sharedInstance.searchByLatLong()
+//        APIClient.sharedInstance.searchByLatLong()
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 10
+    }
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectionCell", for: indexPath) as! CollectionViewCell
+        
+
+        APIClient.sharedInstance.displayImageFromFlickr { (success, photos, error) in
+            guard error == nil else {
+                "Error: \(error!)"
+                return
+            }
+            if success {
+                
+                    guard let photos = photos else {return}
+                    let flickrPhoto = photos[indexPath.row]
+                    let url = URL(string: flickrPhoto.url_m)
+                    let data = try? Data(contentsOf: url!)
+                DispatchQueue.main.async {
+                    cell.collectionImage.image = UIImage(data: data!)
+                }
+            }
+            
+        }
+//        if UserManager.sharedInstance.photos.count > 1 {
+//            let flickrPhoto = UserManager.sharedInstance.photos[indexPath.row]
+//            let url = URL(string: flickrPhoto.url_m)
+//            let data = try? Data(contentsOf: url!)
+//            cell.collectionImage.image = UIImage(data: data!)
+//            print("success")
+//        } else {
+//            print("not success")
+//        }
+        
+        return cell
     }
 
     override func didReceiveMemoryWarning() {

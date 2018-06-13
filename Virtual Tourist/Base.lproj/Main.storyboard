@@ -90,13 +90,27 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="ka5-iH-VDg">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="collectionCell" id="ka5-iH-VDg" customClass="CollectionViewCell" customModule="Virtual_Tourist" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                             <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="FcH-2S-VcK">
+                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                </imageView>
+                                            </subviews>
                                         </view>
+                                        <constraints>
+                                            <constraint firstAttribute="bottom" secondItem="FcH-2S-VcK" secondAttribute="bottom" id="1RF-zd-wNU"/>
+                                            <constraint firstAttribute="trailing" secondItem="FcH-2S-VcK" secondAttribute="trailing" id="QQZ-WY-BGG"/>
+                                            <constraint firstItem="FcH-2S-VcK" firstAttribute="leading" secondItem="ka5-iH-VDg" secondAttribute="leading" id="dct-mh-TNb"/>
+                                            <constraint firstItem="FcH-2S-VcK" firstAttribute="top" secondItem="ka5-iH-VDg" secondAttribute="top" id="hnu-Si-3S3"/>
+                                        </constraints>
+                                        <connections>
+                                            <outlet property="collectionImage" destination="FcH-2S-VcK" id="4wF-Kj-sb4"/>
+                                        </connections>
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
@@ -121,6 +135,7 @@
                         <viewLayoutGuide key="safeArea" id="YSP-Du-AJZ"/>
                     </view>
                     <connections>
+                        <outlet property="collectionView" destination="Ktg-fo-Q0w" id="lzC-UG-SRn"/>
                         <outlet property="mapView" destination="hzT-BJ-MbI" id="WY6-3i-Y4o"/>
                     </connections>
                 </viewController>

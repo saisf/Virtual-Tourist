@@ -23,7 +23,51 @@ struct APIClient {
         displayImageFromFlickrBySearch(methodParameters as [String:AnyObject])
     }
     
-     private func displayImageFromFlickr(_ methodParameters: [String: AnyObject]) {
+    func displayImageFromFlickr(completion: @escaping(_ success: Bool,_ image: [Photo]?,_ error: Error? ) -> Void) {
+        let methodParameters = [
+            Constants.FlickrParameterKeys.Method: Constants.FlickrParameterValues.SearchMethod,
+            Constants.FlickrParameterKeys.APIKey: Constants.FlickrParameterValues.APIKey,
+            Constants.FlickrParameterKeys.BoundingBox: bboxString(),
+            Constants.FlickrParameterKeys.SafeSearch: Constants.FlickrParameterValues.UseSafeSearch,
+            Constants.FlickrParameterKeys.Extras: Constants.FlickrParameterValues.MediumURL,
+            Constants.FlickrParameterKeys.Format: Constants.FlickrParameterValues.ResponseFormat,
+            Constants.FlickrParameterKeys.NoJSONCallback: Constants.FlickrParameterValues.DisableJSONCallback
+        ]
+        // create session and request
+        let session = URLSession.shared
+        let request = URLRequest(url: flickrURLFromParameters(methodParameters as [String : AnyObject]))
+        let task = session.dataTask(with: request) { (data, response, error) in
+            guard error == nil else {
+                print("Error: \(error!)")
+                completion(false, nil, error)
+                return
+            }
+            guard let data = data else {
+                print("Error: \(error!)")
+                completion(false, nil, error)
+                return
+            }
+            
+            if let jsonResults = try? JSONDecoder().decode(Stat.self, from: data) {
+                //                print(jsonResults.stat)
+                ////                print(jsonResults.photos)
+                //                print(jsonResults.photos.photo)
+                guard let photo = jsonResults.photos.photo else {return}
+                completion(true, photo, nil)
+//                UserManager.sharedInstance.photos = photo
+//                for url in UserManager.sharedInstance.photos {
+//                    print(url.url_m)
+                
+                //                for url in photo {
+                //                    print(url.url_m)
+                //                }
+                //                print(photo)
+            } else {print("error occurred")
+                completion(false, nil, error)
+            }
+        }
+        // start the task!
+        task.resume()
         
     }
     
@@ -37,6 +81,7 @@ struct APIClient {
         
         // create network request
         let task = session.dataTask(with: request) { (data, response, error) in
+            
 //
 ////            if error != nil {
 //////                completion(false, nil, error)
@@ -129,9 +174,13 @@ struct APIClient {
 ////                print(jsonResults.photos)
 //                print(jsonResults.photos.photo)
                 guard let photo = jsonResults.photos.photo else {return}
-                for url in photo {
+                UserManager.sharedInstance.photos = photo
+                for url in UserManager.sharedInstance.photos {
                     print(url.url_m)
                 }
+//                for url in photo {
+//                    print(url.url_m)
+//                }
 //                print(photo)
             } else {print("error occurred")}
             

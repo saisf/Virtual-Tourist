@@ -20,6 +20,7 @@
 		EC5901FD20CF2E3D00CA3388 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC5901FC20CF2E3D00CA3388 /* Constants.swift */; };
 		EC5901FF20D0704400CA3388 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC5901FE20D0704400CA3388 /* Data.swift */; };
 		EC59020120D0765600CA3388 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC59020020D0765600CA3388 /* UserManager.swift */; };
+		ECF0ADEF20D1CB2300FB9AFE /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF0ADEE20D1CB2300FB9AFE /* CollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		EC5901FC20CF2E3D00CA3388 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		EC5901FE20D0704400CA3388 /* Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
 		EC59020020D0765600CA3388 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
+		ECF0ADEE20D1CB2300FB9AFE /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +72,7 @@
 		EC5901D820C9A64800CA3388 /* Virtual Tourist */ = {
 			isa = PBXGroup;
 			children = (
+				ECF0ADED20D1CB0300FB9AFE /* Delegate */,
 				EC5901F720CF16F800CA3388 /* Model */,
 				EC5901F420CF136A00CA3388 /* ViewController */,
 				EC5901D920C9A64800CA3388 /* AppDelegate.swift */,
@@ -102,6 +105,14 @@
 				EC59020020D0765600CA3388 /* UserManager.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		ECF0ADED20D1CB0300FB9AFE /* Delegate */ = {
+			isa = PBXGroup;
+			children = (
+				ECF0ADEE20D1CB2300FB9AFE /* CollectionViewCell.swift */,
+			);
+			path = Delegate;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -186,6 +197,7 @@
 				EC5901FF20D0704400CA3388 /* Data.swift in Sources */,
 				EC59020120D0765600CA3388 /* UserManager.swift in Sources */,
 				EC5901FD20CF2E3D00CA3388 /* Constants.swift in Sources */,
+				ECF0ADEF20D1CB2300FB9AFE /* CollectionViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
