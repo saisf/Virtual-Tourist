@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		263CA3C064C6B635396FA402 /* Pods_Virtual_Tourist.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C37B1EB2AEA00E1CBF4183FE /* Pods_Virtual_Tourist.framework */; };
 		EC5901DA20C9A64800CA3388 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC5901D920C9A64800CA3388 /* AppDelegate.swift */; };
 		EC5901DC20C9A64800CA3388 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC5901DB20C9A64800CA3388 /* ViewController.swift */; };
 		EC5901DF20C9A64800CA3388 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EC5901DD20C9A64800CA3388 /* Main.storyboard */; };
@@ -24,6 +25,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3FAAC3A11DFA37E67146E608 /* Pods-Virtual Tourist.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Virtual Tourist.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Virtual Tourist/Pods-Virtual Tourist.debug.xcconfig"; sourceTree = "<group>"; };
+		601EB208760B82932C0BDA7C /* Pods-Virtual Tourist.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Virtual Tourist.release.xcconfig"; path = "Pods/Target Support Files/Pods-Virtual Tourist/Pods-Virtual Tourist.release.xcconfig"; sourceTree = "<group>"; };
+		C37B1EB2AEA00E1CBF4183FE /* Pods_Virtual_Tourist.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Virtual_Tourist.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC5901D620C9A64800CA3388 /* Virtual Tourist.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Virtual Tourist.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC5901D920C9A64800CA3388 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EC5901DB20C9A64800CA3388 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -47,17 +51,29 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				263CA3C064C6B635396FA402 /* Pods_Virtual_Tourist.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		71312BB2CBC4E0A1F29149BE /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				3FAAC3A11DFA37E67146E608 /* Pods-Virtual Tourist.debug.xcconfig */,
+				601EB208760B82932C0BDA7C /* Pods-Virtual Tourist.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		EC5901CD20C9A64800CA3388 = {
 			isa = PBXGroup;
 			children = (
 				EC5901D820C9A64800CA3388 /* Virtual Tourist */,
 				EC5901D720C9A64800CA3388 /* Products */,
+				71312BB2CBC4E0A1F29149BE /* Pods */,
+				EF44F46BF7BA2D67B427AA49 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -115,6 +131,14 @@
 			path = Delegate;
 			sourceTree = "<group>";
 		};
+		EF44F46BF7BA2D67B427AA49 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C37B1EB2AEA00E1CBF4183FE /* Pods_Virtual_Tourist.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -122,9 +146,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = EC5901EB20C9A64800CA3388 /* Build configuration list for PBXNativeTarget "Virtual Tourist" */;
 			buildPhases = (
+				8345502D20DA1CEEC4FAF548 /* [CP] Check Pods Manifest.lock */,
 				EC5901D220C9A64800CA3388 /* Sources */,
 				EC5901D320C9A64800CA3388 /* Frameworks */,
 				EC5901D420C9A64800CA3388 /* Resources */,
+				B97D6430C9C5D7425AE756D6 /* [CP] Embed Pods Frameworks */,
+				08B44BCEB9432C40A8DDFC5F /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -181,6 +208,60 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		08B44BCEB9432C40A8DDFC5F /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Virtual Tourist/Pods-Virtual Tourist-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		8345502D20DA1CEEC4FAF548 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Virtual Tourist-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B97D6430C9C5D7425AE756D6 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Virtual Tourist/Pods-Virtual Tourist-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Virtual Tourist/Pods-Virtual Tourist-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		EC5901D220C9A64800CA3388 /* Sources */ = {
@@ -332,6 +413,7 @@
 		};
 		EC5901EC20C9A64800CA3388 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3FAAC3A11DFA37E67146E608 /* Pods-Virtual Tourist.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -347,6 +429,7 @@
 		};
 		EC5901ED20C9A64800CA3388 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 601EB208760B82932C0BDA7C /* Pods-Virtual Tourist.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;

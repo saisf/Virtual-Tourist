@@ -8,7 +8,14 @@
 
 import Foundation
 import MapKit
+import CoreData
 
 class Annotaton: NSObject {
     static var annotations = [MKPointAnnotation]()
+    
+    static var pins = [NSManagedObject]()
+    
+    static var photos = [NSManagedObject]()
+    
+    static var testPhotos = [UIImage]()
 }

@@ -9,7 +9,7 @@
 import Foundation
 
 struct UserManager {
-    var photos = [Photo]()
+    var photos = [CodablePhoto]()
     
     static var sharedInstance = UserManager()
 }
