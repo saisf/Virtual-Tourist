@@ -20,9 +20,9 @@ struct Stat: Codable {
 
 struct Photos: Codable {
     let page: Int
-    let pages: Int
+    let pages: Int?
     let perpage: Int
-    let photo: [Photo]?
+    let photo: [CodablePhoto]?
 //    let total: Int?
 
 //    private enum CodingKeys: String, CodingKey {
@@ -35,7 +35,7 @@ struct Photos: Codable {
 
 }
 
-struct Photo: Codable {
+struct CodablePhoto: Codable {
 //    let farm: Int
 //    let height_m: Int
 //    let id: Int
