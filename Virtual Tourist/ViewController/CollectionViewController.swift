@@ -58,9 +58,6 @@ class CollectionViewController: UIViewController, MKMapViewDelegate, UICollectio
         mapView.setRegion(region, animated: true)
         UserManager.sharedInstance.photos.removeAll()
         
-        // CORE DATA
-//        fetchRecordsForEntity("Photo", inManagedObjectContext: manageObjectContext!)
-//        collectionView.reloadData()
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -124,10 +121,12 @@ class CollectionViewController: UIViewController, MKMapViewDelegate, UICollectio
                 if let firstResult = results.first {
                     print(firstResult.latitude)
                     print(firstResult.longitude)
-                    photos = firstResult.photos?.allObjects as! [Photo]
+                    photos = firstResult.photos?.allObjects as? [Photo]
                     print("Photos Count: \(photos?.count)")
                     if let photos = photos {
-                        photo = photos[indexPath.row]
+                        let sortedPhotos = photos.sorted{ $0.url! < $1.url! }
+                        photo = sortedPhotos[indexPath.row]
+//                        photo = photos[indexPath.row]
                     }
                 }
             }
@@ -142,7 +141,8 @@ class CollectionViewController: UIViewController, MKMapViewDelegate, UICollectio
         
         cell.collectionImage.sd_setShowActivityIndicatorView(true)
         cell.collectionImage.sd_setIndicatorStyle(.gray)
-        cell.collectionImage.sd_setImage(with: url!)
+        cell.collectionImage.image = UIImage(data: (photo?.image)!)
+//        cell.collectionImage.sd_setImage(with: url!)
         print("Collection cell successful")
         return cell
         
