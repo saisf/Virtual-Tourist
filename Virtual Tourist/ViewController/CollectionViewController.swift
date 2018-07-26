@@ -24,15 +24,17 @@ class CollectionViewController: UIViewController, MKMapViewDelegate, UICollectio
     
     var annotations = [NSManagedObject]()
     var photos = [NSManagedObject]()
-    
-    
-    var commitPredicate2: NSPredicate?
+
+    var downloadedPhotos: [Photo]?
+    var deletingPhotos = [Photo]()
+    var tapped = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         mapView.delegate = self
         collectionView.dataSource = self
         collectionView.delegate = self
+        collectionView.allowsMultipleSelection = true
         
         // Disable user map interaction
         mapView.isUserInteractionEnabled = false
@@ -125,6 +127,7 @@ class CollectionViewController: UIViewController, MKMapViewDelegate, UICollectio
                     print("Photos Count: \(photos?.count)")
                     if let photos = photos {
                         let sortedPhotos = photos.sorted{ $0.url! < $1.url! }
+                        downloadedPhotos = sortedPhotos
                         photo = sortedPhotos[indexPath.row]
 //                        photo = photos[indexPath.row]
                     }
@@ -142,14 +145,112 @@ class CollectionViewController: UIViewController, MKMapViewDelegate, UICollectio
         cell.collectionImage.sd_setShowActivityIndicatorView(true)
         cell.collectionImage.sd_setIndicatorStyle(.gray)
         cell.collectionImage.image = UIImage(data: (photo?.image)!)
+    
 //        cell.collectionImage.sd_setImage(with: url!)
+
         print("Collection cell successful")
         return cell
         
     }
-
-
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let cell = collectionView.cellForItem(at: indexPath) as? CollectionViewCell
+        
+//        guard let image = cell?.collectionImage.image else {return}
+//        let imageData = UIImagePNGRepresentation(image)
+        
+//        cell?.toggleSelected()
+        if (cell?.isSelected)! {
+//            cell?.backgroundColor = UIColor.gray
+            cell?.contentView.alpha = 0.5
+//
+            guard let downloadedPhotos = downloadedPhotos else {return}
+            deletingPhotos.append(downloadedPhotos[indexPath.row])
+            print("Downloaded count: \(downloadedPhotos.count)")
+            print("Deleted count: \(deletingPhotos.count)")
+            print(indexPath.row)
+        } else {
+//            cell?.backgroundColor = nil
+//            var num = 0
+//            print("There's something in deletingPhotos")
+//            guard let downloadedPhotos = downloadedPhotos else {return}
+//                for x in 0...deletingPhotos.count - 1 {
+////                    if deletingPhotos.count - 1 >= indexPath.row {
+//                        if deletingPhotos[x] == downloadedPhotos[indexPath.row] {
+//                            print("URL: \(String(describing: deletingPhotos[x].url))")
+//                            num = x
+//                            self.deletingPhotos.remove(at: num)
+//                        }
+////                    }
+//                }
+//            print("Deleted count: \(deletingPhotos.count)")
+        }
+        
+        
+//        if tapped == false {
+//            cell?.contentView.backgroundColor = UIColor.red
+////            guard let downloadedPhotos = downloadedPhotos else {return}
+//            deletingPhotos.append(downloadedPhotos![indexPath.row])
+//            print("Downloaded count: \(downloadedPhotos?.count)")
+//            print("Deleted count: \(deletingPhotos.count)")
+//            print(indexPath.row)
+//            tapped = true
+//        } else {
+//            var num = 0
+//            cell?.contentView.backgroundColor = nil
+//            print(deletingPhotos.count)
+//            print("There's something in deletingPhotos")
+//            guard let downloadedPhotos = downloadedPhotos else {return}
+//                for x in 0...deletingPhotos.count - 1 {
+////                    if deletingPhotos.count - 1 >= indexPath.row {
+//                        if deletingPhotos[x] == downloadedPhotos[indexPath.row] {
+//                            print("URL: \(String(describing: deletingPhotos[x].url))")
+//                            num = x
+//                            self.deletingPhotos.remove(at: num)
+//                        }
+////                    }
+//                }
+//            print("Deleted count: \(deletingPhotos.count)")
+//            tapped = false
+//        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        
+        let cell = collectionView.cellForItem(at: indexPath) as? CollectionViewCell
+//        cell?.toggleSelected()
+        
+//        if tapped == false {
+//            tapped = false
+//        } else {
+//            tapped = true
+//        }
+        if (cell?.isSelected)! {
+//            cell?.backgroundColor = UIColor.gray
+            cell?.contentView.alpha = 0.5
+
+        } else {
+//            cell?.backgroundColor = nil
+            cell?.contentView.alpha = 1
+            var num = 0
+            print("There's something in deletingPhotos")
+            guard let downloadedPhotos = downloadedPhotos else {return}
+                for x in 0...deletingPhotos.count - 1 {
+//                    if deletingPhotos.count - 1 >= indexPath.row {
+                        if deletingPhotos[x] == downloadedPhotos[indexPath.row] {
+                            print("URL: \(String(describing: deletingPhotos[x].url))")
+                            num = x
+                            self.deletingPhotos.remove(at: num)
+                            print("Deleted count: \(deletingPhotos.count)")
+                            return
+                        }
+//                    }
+                }
+            
+        }
+    }
+
+
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         var pinView = mapView as? MKPinAnnotationView
         pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: nil)

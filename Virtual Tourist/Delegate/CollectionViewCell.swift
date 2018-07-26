@@ -12,4 +12,11 @@ import UIKit
 class CollectionViewCell: UICollectionViewCell  {
     @IBOutlet weak var collectionImage: UIImageView!
     
+//    func toggleSelected() {
+//        if (isSelected) {
+//            backgroundColor = .red
+//        } else {
+//            backgroundColor = nil
+//        }
+//    }
 }
