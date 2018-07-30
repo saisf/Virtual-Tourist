@@ -143,12 +143,16 @@ class CollectionViewController: UIViewController, MKMapViewDelegate, UICollectio
         } catch {
             fatalError("Error in retrieving Pin item")
         }
+        
+
 
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectionCell", for: indexPath) as! CollectionViewCell
 
         let url = URL(string: (photo?.url)!)
 
-        
+        if deletingPhotos.count == 0 {
+            cell.contentView.alpha = 1.0
+        }
         cell.collectionImage.sd_setShowActivityIndicatorView(true)
         cell.collectionImage.sd_setIndicatorStyle(.gray)
         cell.collectionImage.image = UIImage(data: (photo?.image)!)
@@ -162,16 +166,11 @@ class CollectionViewController: UIViewController, MKMapViewDelegate, UICollectio
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let cell = collectionView.cellForItem(at: indexPath) as? CollectionViewCell
+        cell?.contentView.alpha = 0.5
         
-        
-//        guard let image = cell?.collectionImage.image else {return}
-//        let imageData = UIImagePNGRepresentation(image)
-        
-//        cell?.toggleSelected()
+
         if (cell?.isSelected)! {
-//            cell?.backgroundColor = UIColor.gray
-            cell?.contentView.alpha = 0.5
-//
+//            cell?.contentView.alpha = 0.5
             guard let downloadedPhotos = downloadedPhotos else {return}
             deletingPhotos.append(downloadedPhotos[indexPath.row])
             print("Downloaded count: \(downloadedPhotos.count)")
@@ -179,132 +178,61 @@ class CollectionViewController: UIViewController, MKMapViewDelegate, UICollectio
             print(indexPath.row)
             
             if deletingPhotos.count == 0 {
-                //                newPhotosAndDeletingLabels.titleLabel?.text = "Remove Selected Pictures"
-                //                newPhotosAndDeletingLabels.titleLabel?.text = "New Collection"
-                
                 newPhotosAndDeletingLabels.setTitle("New Collection", for: .normal)
-                
             } else {
                 newPhotosAndDeletingLabels.setTitle("Remove Selected Pictures", for: .normal)
             }
-//            } else {
-//                //                newPhotosAndDeletingLabels.titleLabel?.text = "New Collection"
-//                //                newPhotosAndDeletingLabels.titleLabel?.text = "Remove Selected Pictures"
-//
-//            }
-            
-        } else {
-//            if deletingPhotos.count == 0 {
-//                //                newPhotosAndDeletingLabels.titleLabel?.text = "Remove Selected Pictures"
-//                //                newPhotosAndDeletingLabels.titleLabel?.text = "New Collection"
-//
-//                newPhotosAndDeletingLabels.setTitle("New Collection", for: .normal)
-//
-//            } else {
-//                //                newPhotosAndDeletingLabels.titleLabel?.text = "New Collection"
-//                //                newPhotosAndDeletingLabels.titleLabel?.text = "Remove Selected Pictures"
-//                newPhotosAndDeletingLabels.setTitle("Remove Selected Pictures", for: .normal)
-//            }
         }
 
-        
-        
-//        if tapped == false {
-//            cell?.contentView.backgroundColor = UIColor.red
-////            guard let downloadedPhotos = downloadedPhotos else {return}
-//            deletingPhotos.append(downloadedPhotos![indexPath.row])
-//            print("Downloaded count: \(downloadedPhotos?.count)")
-//            print("Deleted count: \(deletingPhotos.count)")
-//            print(indexPath.row)
-//            tapped = true
-//        } else {
-//            var num = 0
-//            cell?.contentView.backgroundColor = nil
-//            print(deletingPhotos.count)
-//            print("There's something in deletingPhotos")
-//            guard let downloadedPhotos = downloadedPhotos else {return}
-//                for x in 0...deletingPhotos.count - 1 {
-////                    if deletingPhotos.count - 1 >= indexPath.row {
-//                        if deletingPhotos[x] == downloadedPhotos[indexPath.row] {
-//                            print("URL: \(String(describing: deletingPhotos[x].url))")
-//                            num = x
-//                            self.deletingPhotos.remove(at: num)
-//                        }
-////                    }
-//                }
-//            print("Deleted count: \(deletingPhotos.count)")
-//            tapped = false
-//        }
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         
         let cell = collectionView.cellForItem(at: indexPath) as? CollectionViewCell
-//        cell?.toggleSelected()
         
-//        if tapped == false {
-//            tapped = false
-//        } else {
-//            tapped = true
-//        }
-
         if (cell?.isSelected)! {
-//            cell?.backgroundColor = UIColor.gray
-            cell?.contentView.alpha = 0.5
-            
-//            if deletingPhotos.count > 0 {
-//                //                newPhotosAndDeletingLabels.titleLabel?.text = "Remove Selected Pictures"
-//                //                newPhotosAndDeletingLabels.titleLabel?.text = "New Collection"
-//                newPhotosAndDeletingLabels.setTitle("Remove Selected Pictures", for: .normal)
-//
-//            } else {
-//                //                newPhotosAndDeletingLabels.titleLabel?.text = "New Collection"
-//                //                newPhotosAndDeletingLabels.titleLabel?.text = "Remove Selected Pictures"
-//                newPhotosAndDeletingLabels.setTitle("New Collection", for: .normal)
-//            }
+
 
         } else {
-//            cell?.backgroundColor = nil
             cell?.contentView.alpha = 1
             var num = 0
             print("There's something in deletingPhotos")
             guard let downloadedPhotos = downloadedPhotos else {return}
             for x in 0...deletingPhotos.count - 1 {
-                    if deletingPhotos[x] == downloadedPhotos[indexPath.row] {
-                        print("URL: \(String(describing: deletingPhotos[x].url))")
-                        num = x
-                        self.deletingPhotos.remove(at: num)
+                if deletingPhotos[x] == downloadedPhotos[indexPath.row] {
+                    print("URL: \(String(describing: deletingPhotos[x].url))")
+                    num = x
+                    self.deletingPhotos.remove(at: num)
 
-                        if deletingPhotos.count == 0 {
-                            //                newPhotosAndDeletingLabels.titleLabel?.text = "Remove Selected Pictures"
-                            //                newPhotosAndDeletingLabels.titleLabel?.text = "New Collection"
-                            
-                            newPhotosAndDeletingLabels.setTitle("New Collection", for: .normal)
-                            
-                        } else {
-                            newPhotosAndDeletingLabels.setTitle("Remove Selected Pictures", for: .normal)
-                        }
-
-                        print("Deleted count: \(deletingPhotos.count)")
-                        return
+                    if deletingPhotos.count == 0 {
+                        newPhotosAndDeletingLabels.setTitle("New Collection", for: .normal)
+                    } else {
+                        newPhotosAndDeletingLabels.setTitle("Remove Selected Pictures", for: .normal)
                     }
+
+                    print("Deleted count: \(deletingPhotos.count)")
+                    return
+                }
             }
-//            if deletingPhotos.count == 0 {
-//                //                newPhotosAndDeletingLabels.titleLabel?.text = "Remove Selected Pictures"
-//                //                newPhotosAndDeletingLabels.titleLabel?.text = "New Collection"
-//
-//                newPhotosAndDeletingLabels.setTitle("New Collection", for: .normal)
-//
-//            } else {
-//                //                newPhotosAndDeletingLabels.titleLabel?.text = "New Collection"
-//                //                newPhotosAndDeletingLabels.titleLabel?.text = "Remove Selected Pictures"
-//                newPhotosAndDeletingLabels.setTitle("Remove Selected Pictures", for: .normal)
-//            }
-                    }
+        }
     }
 
     @IBAction func newPhotosAndDeletingButton(_ sender: UIButton) {
+        if deletingPhotos.count > 0 {
+            for photo in deletingPhotos {
+                manageObjectContext?.delete(photo)
+            }
+            do {
+                try manageObjectContext?.save()
+                print("FINAL PHOTOS DELETED SUCCESSFULLY")
+                collectionView.reloadData()
+                deletingPhotos = [Photo]()
+                
 
+            } catch {
+                print("Something wrong to delete photos")
+            }
+        }
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
