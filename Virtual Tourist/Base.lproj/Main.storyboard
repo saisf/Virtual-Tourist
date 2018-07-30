@@ -114,29 +114,31 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="v8F-Nc-0KQ">
-                                <rect key="frame" x="0.0" y="710" width="375" height="68"/>
+                            <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="v8F-Nc-0KQ">
+                                <rect key="frame" x="0.0" y="744" width="375" height="34"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <state key="normal" title="New Collection"/>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="Ktg-fo-Q0w" firstAttribute="leading" secondItem="YSP-Du-AJZ" secondAttribute="leading" id="4QF-bg-y8k"/>
+                            <constraint firstItem="v8F-Nc-0KQ" firstAttribute="leading" secondItem="YSP-Du-AJZ" secondAttribute="leading" id="6RD-0U-tLf"/>
+                            <constraint firstItem="v8F-Nc-0KQ" firstAttribute="centerX" secondItem="YSP-Du-AJZ" secondAttribute="centerX" id="91X-WB-gf1"/>
                             <constraint firstItem="hzT-BJ-MbI" firstAttribute="trailing" secondItem="YSP-Du-AJZ" secondAttribute="trailing" id="A9x-rY-aQ8"/>
-                            <constraint firstItem="v8F-Nc-0KQ" firstAttribute="trailing" secondItem="YSP-Du-AJZ" secondAttribute="trailing" id="AiB-gP-aBy"/>
-                            <constraint firstItem="YSP-Du-AJZ" firstAttribute="bottom" secondItem="v8F-Nc-0KQ" secondAttribute="bottom" id="E0h-WD-JOk"/>
                             <constraint firstItem="hzT-BJ-MbI" firstAttribute="leading" secondItem="YSP-Du-AJZ" secondAttribute="leading" id="Fqa-Oh-3Gd"/>
+                            <constraint firstItem="YSP-Du-AJZ" firstAttribute="trailing" secondItem="v8F-Nc-0KQ" secondAttribute="trailing" id="L0N-iK-Oin"/>
                             <constraint firstItem="Ktg-fo-Q0w" firstAttribute="top" secondItem="hzT-BJ-MbI" secondAttribute="bottom" constant="-1" id="TkD-WK-nRE"/>
-                            <constraint firstItem="v8F-Nc-0KQ" firstAttribute="leading" secondItem="YSP-Du-AJZ" secondAttribute="leading" id="Tw3-rv-6h4"/>
-                            <constraint firstItem="v8F-Nc-0KQ" firstAttribute="top" secondItem="Ktg-fo-Q0w" secondAttribute="bottom" constant="8" id="cSn-eF-rPB"/>
                             <constraint firstItem="hzT-BJ-MbI" firstAttribute="top" secondItem="YSP-Du-AJZ" secondAttribute="top" id="fMb-Dr-YOu"/>
                             <constraint firstItem="Ktg-fo-Q0w" firstAttribute="trailing" secondItem="YSP-Du-AJZ" secondAttribute="trailing" id="g5o-H2-Fd3"/>
+                            <constraint firstItem="YSP-Du-AJZ" firstAttribute="bottom" secondItem="v8F-Nc-0KQ" secondAttribute="bottom" id="mBt-wH-UeL"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="YSP-Du-AJZ"/>
                     </view>
                     <connections>
                         <outlet property="collectionView" destination="Ktg-fo-Q0w" id="lzC-UG-SRn"/>
                         <outlet property="mapView" destination="hzT-BJ-MbI" id="WY6-3i-Y4o"/>
+                        <outlet property="newPhotosAndDeletingLabels" destination="v8F-Nc-0KQ" id="9fg-p2-QcZ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Oo2-V6-x6g" userLabel="First Responder" sceneMemberID="firstResponder"/>

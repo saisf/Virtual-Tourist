@@ -15,6 +15,9 @@ class CollectionViewController: UIViewController, MKMapViewDelegate, UICollectio
     
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var collectionView: UICollectionView!
+
+    @IBOutlet weak var newPhotosAndDeletingLabels: UIButton!
+    
     var imageURLString = [String]()
     var images = [CodablePhoto]()
     var manager: SDWebImageManager = SDWebImageManager.shared()
@@ -35,6 +38,9 @@ class CollectionViewController: UIViewController, MKMapViewDelegate, UICollectio
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.allowsMultipleSelection = true
+        newPhotosAndDeletingLabels.titleLabel?.textAlignment = .center
+        
+        
         
         // Disable user map interaction
         mapView.isUserInteractionEnabled = false
@@ -59,6 +65,7 @@ class CollectionViewController: UIViewController, MKMapViewDelegate, UICollectio
         let region = MKCoordinateRegionMake(UScenterCoordinate, span)
         mapView.setRegion(region, animated: true)
         UserManager.sharedInstance.photos.removeAll()
+        
         
     }
     
@@ -156,6 +163,7 @@ class CollectionViewController: UIViewController, MKMapViewDelegate, UICollectio
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let cell = collectionView.cellForItem(at: indexPath) as? CollectionViewCell
         
+        
 //        guard let image = cell?.collectionImage.image else {return}
 //        let imageData = UIImagePNGRepresentation(image)
         
@@ -169,22 +177,36 @@ class CollectionViewController: UIViewController, MKMapViewDelegate, UICollectio
             print("Downloaded count: \(downloadedPhotos.count)")
             print("Deleted count: \(deletingPhotos.count)")
             print(indexPath.row)
+            
+            if deletingPhotos.count == 0 {
+                //                newPhotosAndDeletingLabels.titleLabel?.text = "Remove Selected Pictures"
+                //                newPhotosAndDeletingLabels.titleLabel?.text = "New Collection"
+                
+                newPhotosAndDeletingLabels.setTitle("New Collection", for: .normal)
+                
+            } else {
+                newPhotosAndDeletingLabels.setTitle("Remove Selected Pictures", for: .normal)
+            }
+//            } else {
+//                //                newPhotosAndDeletingLabels.titleLabel?.text = "New Collection"
+//                //                newPhotosAndDeletingLabels.titleLabel?.text = "Remove Selected Pictures"
+//
+//            }
+            
         } else {
-//            cell?.backgroundColor = nil
-//            var num = 0
-//            print("There's something in deletingPhotos")
-//            guard let downloadedPhotos = downloadedPhotos else {return}
-//                for x in 0...deletingPhotos.count - 1 {
-////                    if deletingPhotos.count - 1 >= indexPath.row {
-//                        if deletingPhotos[x] == downloadedPhotos[indexPath.row] {
-//                            print("URL: \(String(describing: deletingPhotos[x].url))")
-//                            num = x
-//                            self.deletingPhotos.remove(at: num)
-//                        }
-////                    }
-//                }
-//            print("Deleted count: \(deletingPhotos.count)")
+//            if deletingPhotos.count == 0 {
+//                //                newPhotosAndDeletingLabels.titleLabel?.text = "Remove Selected Pictures"
+//                //                newPhotosAndDeletingLabels.titleLabel?.text = "New Collection"
+//
+//                newPhotosAndDeletingLabels.setTitle("New Collection", for: .normal)
+//
+//            } else {
+//                //                newPhotosAndDeletingLabels.titleLabel?.text = "New Collection"
+//                //                newPhotosAndDeletingLabels.titleLabel?.text = "Remove Selected Pictures"
+//                newPhotosAndDeletingLabels.setTitle("Remove Selected Pictures", for: .normal)
+//            }
         }
+
         
         
 //        if tapped == false {
@@ -225,9 +247,21 @@ class CollectionViewController: UIViewController, MKMapViewDelegate, UICollectio
 //        } else {
 //            tapped = true
 //        }
+
         if (cell?.isSelected)! {
 //            cell?.backgroundColor = UIColor.gray
             cell?.contentView.alpha = 0.5
+            
+//            if deletingPhotos.count > 0 {
+//                //                newPhotosAndDeletingLabels.titleLabel?.text = "Remove Selected Pictures"
+//                //                newPhotosAndDeletingLabels.titleLabel?.text = "New Collection"
+//                newPhotosAndDeletingLabels.setTitle("Remove Selected Pictures", for: .normal)
+//
+//            } else {
+//                //                newPhotosAndDeletingLabels.titleLabel?.text = "New Collection"
+//                //                newPhotosAndDeletingLabels.titleLabel?.text = "Remove Selected Pictures"
+//                newPhotosAndDeletingLabels.setTitle("New Collection", for: .normal)
+//            }
 
         } else {
 //            cell?.backgroundColor = nil
@@ -235,22 +269,44 @@ class CollectionViewController: UIViewController, MKMapViewDelegate, UICollectio
             var num = 0
             print("There's something in deletingPhotos")
             guard let downloadedPhotos = downloadedPhotos else {return}
-                for x in 0...deletingPhotos.count - 1 {
-//                    if deletingPhotos.count - 1 >= indexPath.row {
-                        if deletingPhotos[x] == downloadedPhotos[indexPath.row] {
-                            print("URL: \(String(describing: deletingPhotos[x].url))")
-                            num = x
-                            self.deletingPhotos.remove(at: num)
-                            print("Deleted count: \(deletingPhotos.count)")
-                            return
+            for x in 0...deletingPhotos.count - 1 {
+                    if deletingPhotos[x] == downloadedPhotos[indexPath.row] {
+                        print("URL: \(String(describing: deletingPhotos[x].url))")
+                        num = x
+                        self.deletingPhotos.remove(at: num)
+
+                        if deletingPhotos.count == 0 {
+                            //                newPhotosAndDeletingLabels.titleLabel?.text = "Remove Selected Pictures"
+                            //                newPhotosAndDeletingLabels.titleLabel?.text = "New Collection"
+                            
+                            newPhotosAndDeletingLabels.setTitle("New Collection", for: .normal)
+                            
+                        } else {
+                            newPhotosAndDeletingLabels.setTitle("Remove Selected Pictures", for: .normal)
                         }
-//                    }
-                }
-            
-        }
+
+                        print("Deleted count: \(deletingPhotos.count)")
+                        return
+                    }
+            }
+//            if deletingPhotos.count == 0 {
+//                //                newPhotosAndDeletingLabels.titleLabel?.text = "Remove Selected Pictures"
+//                //                newPhotosAndDeletingLabels.titleLabel?.text = "New Collection"
+//
+//                newPhotosAndDeletingLabels.setTitle("New Collection", for: .normal)
+//
+//            } else {
+//                //                newPhotosAndDeletingLabels.titleLabel?.text = "New Collection"
+//                //                newPhotosAndDeletingLabels.titleLabel?.text = "Remove Selected Pictures"
+//                newPhotosAndDeletingLabels.setTitle("Remove Selected Pictures", for: .normal)
+//            }
+                    }
     }
 
+    @IBAction func newPhotosAndDeletingButton(_ sender: UIButton) {
 
+    }
+    
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         var pinView = mapView as? MKPinAnnotationView
         pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: nil)
