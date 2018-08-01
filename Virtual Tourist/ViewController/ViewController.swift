@@ -163,67 +163,44 @@ class ViewController: UIViewController, MKMapViewDelegate {
         }
     }
     
-    func showAlert() {
-        let alert = UIAlertController(title: "Alert", message: "Wait Please!", preferredStyle: .alert)
-        present(alert, animated: true, completion: nil)
-        Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) { (_) in
-            alert.dismiss(animated: true, completion: nil)
-        }
-    }
-    
-    func testDownload(url: URL, completion: @escaping(_ success: Bool, _ data: Data?, _ error: Error?) -> Void) {
-        self.manager.imageDownloader?.downloadImage(with: url, options: .highPriority, progress: nil, completed: { (image, data, error, success) in
-            guard error == nil else {
-                completion(false, nil, error!)
-                return
-            }
-            guard let image = image else {return}
-            guard let data = UIImagePNGRepresentation(image) else {return}
-            print("Image data saved successful")
-            completion(true, data, nil)
-        })
-        
-    }
-    
+    // MARK: CORE DATA function to save Pin and Photo
     func generateCoreDataPhotosEntity(urls: [URL], latitude: Double, longitude: Double) {
-        
         let pinEntity = NSEntityDescription.entity(forEntityName: "Pin", in: manageObjectContext!)
         let pin = Pin(entity: pinEntity!, insertInto: manageObjectContext)
         pin.latitude = latitude
         pin.longitude = longitude
+        DispatchQueue.main.async {
         for url in urls {
             self.manager.imageDownloader?.downloadImage(with: url, options: .highPriority, progress: nil, completed: { (image, data, error, success) in
                 guard error == nil else {
+                    print("Error occurs downloading image")
                     return
                 }
                 guard let image = image else {
+                    print("Downloaded image is nil")
                     return
                 }
                 guard let data = UIImagePNGRepresentation(image) else {
                     print("Can't convert image to data to be saved for core data Photo")
                     return
                 }
-                print(data)
-                
                 do {
-                    
                     let photoEntity = NSEntityDescription.entity(forEntityName: "Photo", in: self.manageObjectContext!)
-                    
-                    
-                    var photo = Photo(entity: photoEntity!, insertInto: self.manageObjectContext)
+                    let photo = Photo(entity: photoEntity!, insertInto: self.manageObjectContext)
                     photo.image = data
                     photo.url = url.absoluteString
                     pin.addToPhotos(photo)
                     try self.manageObjectContext?.save()
-                    print("Work out")
                 } catch  {
                     print("NOT working out")
                 }
-                print("Image data saved successful")
+                print("Image data saved successfully")
             })
+        }
         }
     }
     
+    // MARK: Extracting urls from downloaded photos data
     func generateURLFromPhotos(photos: [CodablePhoto], completion: @escaping(_ success: Bool,_ url: [URL]?) -> Void) {
         var urls = [URL]()
         for photo in photos {
@@ -237,12 +214,11 @@ class ViewController: UIViewController, MKMapViewDelegate {
         completion(true, urls)
     }
     
+    // MARK: LongPress Gesture function
     @objc func addAnnotationOnLongPress(gesture: UILongPressGestureRecognizer) {
         if gesture.state == .began {
             let point = gesture.location(in: mapView)
             let coordinate = mapView.convert(point, toCoordinateFrom: mapView)
-            print(coordinate)
-//            if self.editingMode == false {
             let annotation = MKPointAnnotation()
             annotation.coordinate = coordinate
             mapView.addAnnotation(annotation)
@@ -256,45 +232,23 @@ class ViewController: UIViewController, MKMapViewDelegate {
                     return
                 }
                 if firstSuccess == true {
-                    guard let photos = photos else {return}
+                    guard let photos = photos else {
+                        print("Downloaded photos are nil")
+                        return
+                    }
                     self.generateURLFromPhotos(photos: photos, completion: { (secondSuccess, urls) in
-//                        print(urls)
                         if secondSuccess == true {
                             guard let urls = urls else {
+                                print("Downloaded urls are nil")
                                 return
                             }
                             self.generateCoreDataPhotosEntity(urls: urls, latitude: latitude, longitude: longitude)
-                    }
-                })
+                        }
+                    })
+                }
             }
-            }
-            
-            
         }
     }
-    
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        print("Before: \(DestinationInformation.latitude)")
-//
-//        do {
-//            var photos: [Photo]?
-//            let latitude = DestinationInformation.latitude
-//            let num = 44.0048505275322
-//            let request: NSFetchRequest<Pin> = Pin.fetchRequest()
-//            request.predicate = NSPredicate(format: "latitude CONTAINS \(latitude)")
-//            let results = try manageObjectContext?.fetch(request) as! [Pin]
-//            guard results != nil else {return}
-//            print(results.count)
-//            print(results)
-//            guard let firstResult = results.first else {return}
-//            print(firstResult.latitude)
-//            print(firstResult.longitude)
-//            photos = firstResult.photos?.allObjects as! [Photo]
-//            print("Photos Count: \(photos?.count)")
-//        } catch {
-//            fatalError("Error in retrieving Pin item")
-//        }
-//    }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         guard let latitude: Double = view.annotation?.coordinate.latitude else {return}
@@ -302,9 +256,7 @@ class ViewController: UIViewController, MKMapViewDelegate {
 
         if editingMode {
             self.mapView.removeAnnotation(view.annotation!)
-                    
             let request: NSFetchRequest<Pin> = Pin.fetchRequest()
-
             request.predicate = NSPredicate(format: "latitude CONTAINS \(latitude) AND longitude CONTAINS \(longitude)")
             let results = try! manageObjectContext?.fetch(request)
             for result in results! {
@@ -312,17 +264,13 @@ class ViewController: UIViewController, MKMapViewDelegate {
             }
             do {
                 try manageObjectContext?.save()
-                print("Delete successfully")
             } catch let error as Error {
-                print("Could not save \(error)")
-                print("Pin Delete unsuccessfully")
+                print("Pin Delete unsuccessfully, error: \(error)")
             }
         } else {
             DestinationInformation.latitude = Double(latitude)
             DestinationInformation.longitude = Double(longitude)
-            
             performSegue(withIdentifier: "ToCollectionViewController", sender: nil)
-
         }
         mapView.deselectAnnotation(view.annotation, animated: false)
     }

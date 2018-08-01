@@ -87,24 +87,26 @@ class CollectionViewController: UIViewController, MKMapViewDelegate, UICollectio
             guard results != nil else {return 0}
             guard let firstResult = results.first else {return 0}
             deletingPin = firstResult
+            
             photos = firstResult.photos?.allObjects as! [Photo]
         } catch {
             fatalError("Error in retrieving Pin item")
         }
         print("BIG PHOTOS COUNT: \(photos?.count)")
-        return (photos?.count) ?? 5
-//        return 11
+        return photos?.count ?? 5
+
         
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectionCell", for: indexPath) as! CollectionViewCell
-        cell.contentView.sd_setIndicatorStyle(.gray)
-        cell.contentView.sd_addActivityIndicator()
+        cell.contentView.backgroundColor = UIColor.darkGray
+        cell.collectionImage.sd_setIndicatorStyle(.gray)
+        cell.collectionImage.sd_addActivityIndicator()
         var photos: [Photo]?
         var photo: Photo?
-//        DispatchQueue.main.async {
- 
+        DispatchQueue.main.async {
+            
             do {
                 let latitude = DestinationInformation.latitude
                 let longitude = DestinationInformation.longitude
@@ -117,15 +119,15 @@ class CollectionViewController: UIViewController, MKMapViewDelegate, UICollectio
                         if let photos = photos {
                             let sortedPhotos = photos.sorted{ $0.url! < $1.url! }
                             self.downloadedPhotos = sortedPhotos
-//                            photo = sortedPhotos[indexPath.row]
-                            photo = self.downloadedPhotos?[indexPath.row]
+                            photo = sortedPhotos[indexPath.row]
                         }
                     }
                 }
             } catch {
                 fatalError("Error in retrieving Pin item")
             }
-//        }
+        }
+        
 
 //        let url = URL(string: (photo?.url)!)
 
@@ -133,11 +135,11 @@ class CollectionViewController: UIViewController, MKMapViewDelegate, UICollectio
             cell.contentView.alpha = 1.0
         }
         DispatchQueue.main.async {
+            cell.collectionImage.sd_removeActivityIndicator()
             cell.collectionImage.image = UIImage(data: (photo?.image)!)
-//             cell.collectionImage.sd_setImage(with: url!)
-            cell.contentView.sd_removeActivityIndicator()
         }
         print("Collection cell successful")
+        
         return cell
         
     }
@@ -200,7 +202,7 @@ class CollectionViewController: UIViewController, MKMapViewDelegate, UICollectio
             for photo in deletingPhotos {
                 manageObjectContext?.delete(photo)
             }
-//            manageObjectContext?.delete(deletingPin)
+
             do {
                 try manageObjectContext?.save()
                 print("FINAL PHOTOS DELETED SUCCESSFULLY")
@@ -212,11 +214,6 @@ class CollectionViewController: UIViewController, MKMapViewDelegate, UICollectio
                 print("Something wrong to delete photos")
             }
         } else {
-            
-//            guard let downloadedPhotos = downloadedPhotos else {return}
-//            for photo in downloadedPhotos {
-//                manageObjectContext?.delete(photo)
-//            }
             manageObjectContext?.delete(deletingPin)
             do {
                 try manageObjectContext?.save()
@@ -240,18 +237,11 @@ class CollectionViewController: UIViewController, MKMapViewDelegate, UICollectio
                             guard let urls = urls else {
                                 return
                             }
-                            print(urls)
-//                            ViewController.shared.generateCoreDataPhotosEntity(urls: urls, latitude: DestinationInformation.latitude, longitude: DestinationInformation.longitude)
-                            
                             let pinEntity = NSEntityDescription.entity(forEntityName: "Pin", in: self.manageObjectContext!)
                             let pin = Pin(entity: pinEntity!, insertInto: self.manageObjectContext)
                             pin.latitude = DestinationInformation.latitude
                             pin.longitude = DestinationInformation.longitude
                             for url in urls {
-                                
-                                
-                                
-                                
                                 self.manager.imageDownloader?.downloadImage(with: url, options: .highPriority, progress: nil, completed: { (image, data, error, success) in
                                     guard error == nil else {
                                         return
@@ -263,14 +253,10 @@ class CollectionViewController: UIViewController, MKMapViewDelegate, UICollectio
                                         print("Can't convert image to data to be saved for core data Photo")
                                         return
                                     }
-                                    print(data)
                                     
                                     do {
-                                        
                                         let photoEntity = NSEntityDescription.entity(forEntityName: "Photo", in: self.manageObjectContext!)
-                                        
-                                        
-                                        var photo = Photo(entity: photoEntity!, insertInto: self.manageObjectContext)
+                                        let photo = Photo(entity: photoEntity!, insertInto: self.manageObjectContext)
                                         photo.image = data
                                         photo.url = url.absoluteString
                                         pin.addToPhotos(photo)
@@ -283,13 +269,6 @@ class CollectionViewController: UIViewController, MKMapViewDelegate, UICollectio
                                     print("Image data saved successful")
                                 })
                             }
-                            print(DestinationInformation.latitude)
-                            print(DestinationInformation.longitude)
-                            print("NEW DOWNLOAD SUCCESSFUL")
-
-                            
-                            
-        
                         }
                     })
                 }
