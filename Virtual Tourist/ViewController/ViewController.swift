@@ -15,6 +15,8 @@ class ViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var edit: UIBarButtonItem!
     @IBOutlet weak var tapPinsLabel: UILabel!
+    
+    static let shared = ViewController()
     var editingMode = false
     var annotationCount = 0
     
@@ -58,7 +60,7 @@ class ViewController: UIViewController, MKMapViewDelegate {
         guard let pins = pins else {return}
         addMapViewAnnotation(pins: pins)
         loadPhotoData()
-        
+        manageObjectContext?.refreshAllObjects()
     }
     
     func deletePinData() {
@@ -183,38 +185,13 @@ class ViewController: UIViewController, MKMapViewDelegate {
         
     }
     
-    func generateCorePi(corePhotos: [Photo], latitude: Double, longitude: Double, completion: @escaping(_ success: Bool) -> Void) {
-        let pinEntity = NSEntityDescription.entity(forEntityName: "Pin", in: self.manageObjectContext!)
-        let pin = Pin(entity: pinEntity!, insertInto: self.manageObjectContext)
-        pin.latitude = latitude
-        pin.longitude = longitude
-        do {
-            try self.manageObjectContext?.save()
-            print("Everything is saved successfully")
-        } catch {
-            print("Core data saved unsuccessful")
-        }
-        for photo in corePhotos {
-            pin.addToPhotos(photo)
-            print(photo)
-        }
-        if pin.photos != nil {
-            completion(true)
-        } else {
-            completion(false)
-        }
-        
-    }
-    
-
     func generateCoreDataPhotosEntity(urls: [URL], latitude: Double, longitude: Double) {
-        var dat = [Data]()
-        let pinEntity = NSEntityDescription.entity(forEntityName: "Pin", in: self.manageObjectContext!)
-        let pin = Pin(entity: pinEntity!, insertInto: self.manageObjectContext)
+        
+        let pinEntity = NSEntityDescription.entity(forEntityName: "Pin", in: manageObjectContext!)
+        let pin = Pin(entity: pinEntity!, insertInto: manageObjectContext)
         pin.latitude = latitude
         pin.longitude = longitude
         for url in urls {
-            
             self.manager.imageDownloader?.downloadImage(with: url, options: .highPriority, progress: nil, completed: { (image, data, error, success) in
                 guard error == nil else {
                     return
@@ -229,6 +206,7 @@ class ViewController: UIViewController, MKMapViewDelegate {
                 print(data)
                 
                 do {
+                    
                     let photoEntity = NSEntityDescription.entity(forEntityName: "Photo", in: self.manageObjectContext!)
                     
                     
@@ -241,7 +219,6 @@ class ViewController: UIViewController, MKMapViewDelegate {
                 } catch  {
                     print("NOT working out")
                 }
-                dat.append(data)
                 print("Image data saved successful")
             })
         }

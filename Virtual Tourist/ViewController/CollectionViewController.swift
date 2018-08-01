@@ -30,6 +30,7 @@ class CollectionViewController: UIViewController, MKMapViewDelegate, UICollectio
 
     var downloadedPhotos: [Photo]?
     var deletingPhotos = [Photo]()
+    var deletingPin = Pin()
     var tapped = false
     
     override func viewDidLoad() {
@@ -48,10 +49,13 @@ class CollectionViewController: UIViewController, MKMapViewDelegate, UICollectio
         // CORE DATA
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         manageObjectContext = appDelegate.persistentContainer.viewContext
+
         
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        
+        
         
         // Add pin annotation
         let annotation = MKPointAnnotation()
@@ -66,99 +70,73 @@ class CollectionViewController: UIViewController, MKMapViewDelegate, UICollectio
         mapView.setRegion(region, animated: true)
         UserManager.sharedInstance.photos.removeAll()
         
-        
     }
+    
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
         var photos: [Photo]?
         do {
             
-            let latitude = DestinationInformation.latitude
-            let longitude = DestinationInformation.longitude
-            let num = 44.0048505275322
+            let latitude = "\(DestinationInformation.latitude)"
+            let longitude = "\(DestinationInformation.longitude)"
             let request: NSFetchRequest<Pin> = Pin.fetchRequest()
             request.predicate = NSPredicate(format: "latitude CONTAINS \(latitude) AND longitude CONTAINS \(longitude)")
             let results = try manageObjectContext?.fetch(request) as! [Pin]
+            print("Big Result: \(results)")
             guard results != nil else {return 0}
-            print(results.count)
-            print(results)
             guard let firstResult = results.first else {return 0}
-            print(firstResult.latitude)
-            print(firstResult.longitude)
+            deletingPin = firstResult
             photos = firstResult.photos?.allObjects as! [Photo]
-            print("Photos Count: \(photos?.count)")
         } catch {
             fatalError("Error in retrieving Pin item")
         }
-        return photos?.count ?? 0
-    }
-    
-    private func fetchRecordsForEntity(_ entity: String, inManagedObjectContext managedObjectContext: NSManagedObjectContext){
-        // Create Fetch Request
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
+        print("BIG PHOTOS COUNT: \(photos?.count)")
+        return (photos?.count) ?? 5
+//        return 11
         
-        // Helpers
-        
-        
-        do {
-            // Execute Fetch Request
-            let records = try managedObjectContext.fetch(fetchRequest)
-            
-            if let records = records as? [NSManagedObject] {
-                result = records
-            }
-            
-        } catch {
-            print("Unable to fetch managed objects for entity \(entity).")
-        }
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectionCell", for: indexPath) as! CollectionViewCell
+        cell.contentView.sd_setIndicatorStyle(.gray)
+        cell.contentView.sd_addActivityIndicator()
         var photos: [Photo]?
         var photo: Photo?
-        do {
-            let latitude = DestinationInformation.latitude
-            let longitude = DestinationInformation.longitude
-            let num = 44.0048505275322
-            let request: NSFetchRequest<Pin> = Pin.fetchRequest()
-            request.predicate = NSPredicate(format: "latitude CONTAINS \(latitude) AND longitude CONTAINS \(longitude)")
-            let results = try manageObjectContext?.fetch(request)
-            if let results = results {
-                print(results.count)
-                print(results)
-                if let firstResult = results.first {
-                    print(firstResult.latitude)
-                    print(firstResult.longitude)
-                    photos = firstResult.photos?.allObjects as? [Photo]
-                    print("Photos Count: \(photos?.count)")
-                    if let photos = photos {
-                        let sortedPhotos = photos.sorted{ $0.url! < $1.url! }
-                        downloadedPhotos = sortedPhotos
-                        photo = sortedPhotos[indexPath.row]
-//                        photo = photos[indexPath.row]
+//        DispatchQueue.main.async {
+ 
+            do {
+                let latitude = DestinationInformation.latitude
+                let longitude = DestinationInformation.longitude
+                let request: NSFetchRequest<Pin> = Pin.fetchRequest()
+                request.predicate = NSPredicate(format: "latitude CONTAINS \(latitude) AND longitude CONTAINS \(longitude)")
+                let results = try self.manageObjectContext?.fetch(request)
+                if let results = results {
+                    if let firstResult = results.first {
+                        photos = firstResult.photos?.allObjects as? [Photo]
+                        if let photos = photos {
+                            let sortedPhotos = photos.sorted{ $0.url! < $1.url! }
+                            self.downloadedPhotos = sortedPhotos
+//                            photo = sortedPhotos[indexPath.row]
+                            photo = self.downloadedPhotos?[indexPath.row]
+                        }
                     }
                 }
+            } catch {
+                fatalError("Error in retrieving Pin item")
             }
-        } catch {
-            fatalError("Error in retrieving Pin item")
-        }
-        
+//        }
 
-
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectionCell", for: indexPath) as! CollectionViewCell
-
-        let url = URL(string: (photo?.url)!)
+//        let url = URL(string: (photo?.url)!)
 
         if deletingPhotos.count == 0 {
             cell.contentView.alpha = 1.0
         }
-        cell.collectionImage.sd_setShowActivityIndicatorView(true)
-        cell.collectionImage.sd_setIndicatorStyle(.gray)
-        cell.collectionImage.image = UIImage(data: (photo?.image)!)
-    
-//        cell.collectionImage.sd_setImage(with: url!)
-
+        DispatchQueue.main.async {
+            cell.collectionImage.image = UIImage(data: (photo?.image)!)
+//             cell.collectionImage.sd_setImage(with: url!)
+            cell.contentView.sd_removeActivityIndicator()
+        }
         print("Collection cell successful")
         return cell
         
@@ -170,7 +148,6 @@ class CollectionViewController: UIViewController, MKMapViewDelegate, UICollectio
         
 
         if (cell?.isSelected)! {
-//            cell?.contentView.alpha = 0.5
             guard let downloadedPhotos = downloadedPhotos else {return}
             deletingPhotos.append(downloadedPhotos[indexPath.row])
             print("Downloaded count: \(downloadedPhotos.count)")
@@ -218,19 +195,104 @@ class CollectionViewController: UIViewController, MKMapViewDelegate, UICollectio
     }
 
     @IBAction func newPhotosAndDeletingButton(_ sender: UIButton) {
+        
         if deletingPhotos.count > 0 {
             for photo in deletingPhotos {
                 manageObjectContext?.delete(photo)
             }
+//            manageObjectContext?.delete(deletingPin)
             do {
                 try manageObjectContext?.save()
                 print("FINAL PHOTOS DELETED SUCCESSFULLY")
                 collectionView.reloadData()
+                newPhotosAndDeletingLabels.setTitle("New Collection", for: .normal)
                 deletingPhotos = [Photo]()
-                
 
             } catch {
                 print("Something wrong to delete photos")
+            }
+        } else {
+            
+//            guard let downloadedPhotos = downloadedPhotos else {return}
+//            for photo in downloadedPhotos {
+//                manageObjectContext?.delete(photo)
+//            }
+            manageObjectContext?.delete(deletingPin)
+            do {
+                try manageObjectContext?.save()
+                print("SECOND: FINAL PHOTOS DELETED SUCCESSFULLY")
+                collectionView.reloadData()
+            } catch {
+                print("Photos deleted unsuccessfully")
+            }
+            
+            APIClient.sharedInstance.displayImageFromFlickr { (firstSuccess, photos, error) in
+                guard error == nil else {
+                    print("Error: \(error!)")
+                    return
+                }
+                
+                if firstSuccess == true {
+                    guard let photos = photos else {return}
+                    ViewController.shared.generateURLFromPhotos(photos: photos, completion: { (secondSuccess, urls) in
+                        //                        print(urls)
+                        if secondSuccess == true {
+                            guard let urls = urls else {
+                                return
+                            }
+                            print(urls)
+//                            ViewController.shared.generateCoreDataPhotosEntity(urls: urls, latitude: DestinationInformation.latitude, longitude: DestinationInformation.longitude)
+                            
+                            let pinEntity = NSEntityDescription.entity(forEntityName: "Pin", in: self.manageObjectContext!)
+                            let pin = Pin(entity: pinEntity!, insertInto: self.manageObjectContext)
+                            pin.latitude = DestinationInformation.latitude
+                            pin.longitude = DestinationInformation.longitude
+                            for url in urls {
+                                
+                                
+                                
+                                
+                                self.manager.imageDownloader?.downloadImage(with: url, options: .highPriority, progress: nil, completed: { (image, data, error, success) in
+                                    guard error == nil else {
+                                        return
+                                    }
+                                    guard let image = image else {
+                                        return
+                                    }
+                                    guard let data = UIImagePNGRepresentation(image) else {
+                                        print("Can't convert image to data to be saved for core data Photo")
+                                        return
+                                    }
+                                    print(data)
+                                    
+                                    do {
+                                        
+                                        let photoEntity = NSEntityDescription.entity(forEntityName: "Photo", in: self.manageObjectContext!)
+                                        
+                                        
+                                        var photo = Photo(entity: photoEntity!, insertInto: self.manageObjectContext)
+                                        photo.image = data
+                                        photo.url = url.absoluteString
+                                        pin.addToPhotos(photo)
+                                        try self.manageObjectContext?.save()
+                                        self.collectionView.reloadData()
+                                        print("Work out")
+                                    } catch  {
+                                        print("NOT working out")
+                                    }
+                                    print("Image data saved successful")
+                                })
+                            }
+                            print(DestinationInformation.latitude)
+                            print(DestinationInformation.longitude)
+                            print("NEW DOWNLOAD SUCCESSFUL")
+
+                            
+                            
+        
+                        }
+                    })
+                }
             }
         }
     }
