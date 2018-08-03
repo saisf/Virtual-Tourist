@@ -113,8 +113,8 @@
 			children = (
 				EC5901F820CF179D00CA3388 /* DestinationCoordinates.swift */,
 				EC5901FE20D0704400CA3388 /* FlickrPhotosData.swift */,
-				EC5901E020C9A64800CA3388 /* Virtual_Tourist.xcdatamodeld */,
 				ECA98B7D2114FDD60005CFB8 /* CoreDataEntitiesGeneration.swift */,
+				EC5901E020C9A64800CA3388 /* Virtual_Tourist.xcdatamodeld */,
 			);
 			path = Model;
 			sourceTree = "<group>";
