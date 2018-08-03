@@ -113,8 +113,6 @@ class ViewController: UIViewController, MKMapViewDelegate {
             let annotation = MKPointAnnotation()
             annotation.coordinate = coordinate
             mapView.addAnnotation(annotation)
-            
-            
             let latitude = Double(coordinate.latitude)
             let longitude = Double(coordinate.longitude)
             DestinationCoordinates.latitude = latitude
