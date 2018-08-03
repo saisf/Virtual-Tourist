@@ -224,8 +224,8 @@ class ViewController: UIViewController, MKMapViewDelegate {
             mapView.addAnnotation(annotation)
             let latitude = Double(coordinate.latitude)
             let longitude = Double(coordinate.longitude)
-            DestinationInformation.latitude = latitude
-            DestinationInformation.longitude = longitude
+            DestinationCoordinates.latitude = latitude
+            DestinationCoordinates.longitude = longitude
             APIClient.sharedInstance.displayImageFromFlickr { (firstSuccess, photos, error) in
                 guard error == nil else {
                     print("Error: \(error!)")
@@ -268,8 +268,8 @@ class ViewController: UIViewController, MKMapViewDelegate {
                 print("Pin Delete unsuccessfully, error: \(error)")
             }
         } else {
-            DestinationInformation.latitude = Double(latitude)
-            DestinationInformation.longitude = Double(longitude)
+            DestinationCoordinates.latitude = Double(latitude)
+            DestinationCoordinates.longitude = Double(longitude)
             performSegue(withIdentifier: "ToCollectionViewController", sender: nil)
         }
         mapView.deselectAnnotation(view.annotation, animated: false)

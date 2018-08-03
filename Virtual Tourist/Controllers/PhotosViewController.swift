@@ -11,27 +11,17 @@ import MapKit
 import SDWebImage
 import CoreData
 
-class CollectionViewController: UIViewController, MKMapViewDelegate, UICollectionViewDataSource,UICollectionViewDelegate, UICollectionViewDelegateFlowLayout  {
+class PhotosViewController: UIViewController, MKMapViewDelegate, UICollectionViewDataSource,UICollectionViewDelegate, UICollectionViewDelegateFlowLayout  {
     
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var collectionView: UICollectionView!
-
     @IBOutlet weak var newPhotosAndDeletingLabels: UIButton!
     
-    var imageURLString = [String]()
-    var images = [CodablePhoto]()
     var manager: SDWebImageManager = SDWebImageManager.shared()
-    var count = 0
-    var result = [NSManagedObject]()
     var manageObjectContext: NSManagedObjectContext?
-    
-    var annotations = [NSManagedObject]()
-    var photos = [NSManagedObject]()
-
     var downloadedPhotos: [Photo]?
     var deletingPhotos = [Photo]()
     var deletingPin = Pin()
-    var tapped = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,35 +31,27 @@ class CollectionViewController: UIViewController, MKMapViewDelegate, UICollectio
         collectionView.allowsMultipleSelection = true
         newPhotosAndDeletingLabels.titleLabel?.textAlignment = .center
         
-        
-        
         // Disable user map interaction
         mapView.isUserInteractionEnabled = false
         
         // CORE DATA
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         manageObjectContext = appDelegate.persistentContainer.viewContext
-
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         
-        
-        
-        // Add pin annotation
+        // Add map pin annotation
         let annotation = MKPointAnnotation()
-        let coordinate = CLLocationCoordinate2DMake(DestinationInformation.latitude, DestinationInformation.longitude)
+        let coordinate = CLLocationCoordinate2DMake(DestinationCoordinates.latitude, DestinationCoordinates.longitude)
         annotation.coordinate = coordinate
         mapView.addAnnotation(annotation)
         
         // MARK: Set map region
         let span = MKCoordinateSpanMake(0.05, 0.05)
-        let UScenterCoordinate = CLLocationCoordinate2D(latitude: DestinationInformation.latitude, longitude: DestinationInformation.longitude)
+        let UScenterCoordinate = CLLocationCoordinate2D(latitude: DestinationCoordinates.latitude, longitude: DestinationCoordinates.longitude)
         let region = MKCoordinateRegionMake(UScenterCoordinate, span)
         mapView.setRegion(region, animated: true)
-        UserManager.sharedInstance.photos.removeAll()
-        
     }
     
     
@@ -77,41 +59,28 @@ class CollectionViewController: UIViewController, MKMapViewDelegate, UICollectio
         
         var photos: [Photo]?
         do {
-            
-            let latitude = "\(DestinationInformation.latitude)"
-            let longitude = "\(DestinationInformation.longitude)"
             let request: NSFetchRequest<Pin> = Pin.fetchRequest()
-            request.predicate = NSPredicate(format: "latitude CONTAINS \(latitude) AND longitude CONTAINS \(longitude)")
+            request.predicate = NSPredicate(format: "latitude CONTAINS \(DestinationCoordinates.latitude) AND longitude CONTAINS \(DestinationCoordinates.longitude)")
             let results = try manageObjectContext?.fetch(request) as! [Pin]
-            print("Big Result: \(results)")
-            guard results != nil else {return 0}
             guard let firstResult = results.first else {return 0}
             deletingPin = firstResult
-            
             photos = firstResult.photos?.allObjects as! [Photo]
         } catch {
             fatalError("Error in retrieving Pin item")
         }
-        print("BIG PHOTOS COUNT: \(photos?.count)")
-        return photos?.count ?? 5
-
-        
+        return photos?.count ?? 0
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectionCell", for: indexPath) as! CollectionViewCell
-        cell.contentView.backgroundColor = UIColor.darkGray
-        cell.collectionImage.sd_setIndicatorStyle(.gray)
-        cell.collectionImage.sd_addActivityIndicator()
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectionCell", for: indexPath) as! PhotosCollectionViewCell
+//        cell.contentView.backgroundColor = UIColor.darkGray
+//        cell.collectionImage.sd_setIndicatorStyle(.gray)
+//        cell.collectionImage.sd_addActivityIndicator()
         var photos: [Photo]?
         var photo: Photo?
-        DispatchQueue.main.async {
-            
             do {
-                let latitude = DestinationInformation.latitude
-                let longitude = DestinationInformation.longitude
                 let request: NSFetchRequest<Pin> = Pin.fetchRequest()
-                request.predicate = NSPredicate(format: "latitude CONTAINS \(latitude) AND longitude CONTAINS \(longitude)")
+                request.predicate = NSPredicate(format: "latitude CONTAINS \(DestinationCoordinates.latitude) AND longitude CONTAINS \(DestinationCoordinates.longitude)")
                 let results = try self.manageObjectContext?.fetch(request)
                 if let results = results {
                     if let firstResult = results.first {
@@ -126,17 +95,15 @@ class CollectionViewController: UIViewController, MKMapViewDelegate, UICollectio
             } catch {
                 fatalError("Error in retrieving Pin item")
             }
-        }
-        
-
-//        let url = URL(string: (photo?.url)!)
-
         if deletingPhotos.count == 0 {
             cell.contentView.alpha = 1.0
         }
         DispatchQueue.main.async {
-            cell.collectionImage.sd_removeActivityIndicator()
-            cell.collectionImage.image = UIImage(data: (photo?.image)!)
+            if let image = photo?.image {
+//            cell.collectionImage.sd_removeActivityIndicator()
+//            cell.collectionImage.image = UIImage(data: (photo?.image)!)
+                cell.configureCell(image: image)
+            }
         }
         print("Collection cell successful")
         
@@ -145,67 +112,46 @@ class CollectionViewController: UIViewController, MKMapViewDelegate, UICollectio
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let cell = collectionView.cellForItem(at: indexPath) as? CollectionViewCell
-        cell?.contentView.alpha = 0.5
-        
-
+        let cell = collectionView.cellForItem(at: indexPath) as? PhotosCollectionViewCell
         if (cell?.isSelected)! {
             guard let downloadedPhotos = downloadedPhotos else {return}
             deletingPhotos.append(downloadedPhotos[indexPath.row])
-            print("Downloaded count: \(downloadedPhotos.count)")
-            print("Deleted count: \(deletingPhotos.count)")
-            print(indexPath.row)
-            
             if deletingPhotos.count == 0 {
                 newPhotosAndDeletingLabels.setTitle("New Collection", for: .normal)
             } else {
                 newPhotosAndDeletingLabels.setTitle("Remove Selected Pictures", for: .normal)
             }
         }
-
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        
-        let cell = collectionView.cellForItem(at: indexPath) as? CollectionViewCell
-        
+        let cell = collectionView.cellForItem(at: indexPath) as? PhotosCollectionViewCell
         if (cell?.isSelected)! {
-
-
-        } else {
-            cell?.contentView.alpha = 1
-            var num = 0
-            print("There's something in deletingPhotos")
-            guard let downloadedPhotos = downloadedPhotos else {return}
-            for x in 0...deletingPhotos.count - 1 {
-                if deletingPhotos[x] == downloadedPhotos[indexPath.row] {
-                    print("URL: \(String(describing: deletingPhotos[x].url))")
-                    num = x
-                    self.deletingPhotos.remove(at: num)
-
-                    if deletingPhotos.count == 0 {
-                        newPhotosAndDeletingLabels.setTitle("New Collection", for: .normal)
-                    } else {
-                        newPhotosAndDeletingLabels.setTitle("Remove Selected Pictures", for: .normal)
+            } else {
+                var num = 0
+                guard let downloadedPhotos = downloadedPhotos else {return}
+                for x in 0...deletingPhotos.count - 1 {
+                    if deletingPhotos[x] == downloadedPhotos[indexPath.row] {
+                        num = x
+                        deletingPhotos.remove(at: num)
+                        if deletingPhotos.count == 0 {
+                            newPhotosAndDeletingLabels.setTitle("New Collection", for: .normal)
+                        } else {
+                            newPhotosAndDeletingLabels.setTitle("Remove Selected Pictures", for: .normal)
+                        }
+                        return
                     }
-
-                    print("Deleted count: \(deletingPhotos.count)")
-                    return
                 }
             }
-        }
     }
 
     @IBAction func newPhotosAndDeletingButton(_ sender: UIButton) {
-        
         if deletingPhotos.count > 0 {
             for photo in deletingPhotos {
                 manageObjectContext?.delete(photo)
             }
-
             do {
                 try manageObjectContext?.save()
-                print("FINAL PHOTOS DELETED SUCCESSFULLY")
                 collectionView.reloadData()
                 newPhotosAndDeletingLabels.setTitle("New Collection", for: .normal)
                 deletingPhotos = [Photo]()
@@ -217,7 +163,6 @@ class CollectionViewController: UIViewController, MKMapViewDelegate, UICollectio
             manageObjectContext?.delete(deletingPin)
             do {
                 try manageObjectContext?.save()
-                print("SECOND: FINAL PHOTOS DELETED SUCCESSFULLY")
                 collectionView.reloadData()
             } catch {
                 print("Photos deleted unsuccessfully")
@@ -239,8 +184,8 @@ class CollectionViewController: UIViewController, MKMapViewDelegate, UICollectio
                             }
                             let pinEntity = NSEntityDescription.entity(forEntityName: "Pin", in: self.manageObjectContext!)
                             let pin = Pin(entity: pinEntity!, insertInto: self.manageObjectContext)
-                            pin.latitude = DestinationInformation.latitude
-                            pin.longitude = DestinationInformation.longitude
+                            pin.latitude = DestinationCoordinates.latitude
+                            pin.longitude = DestinationCoordinates.longitude
                             for url in urls {
                                 self.manager.imageDownloader?.downloadImage(with: url, options: .highPriority, progress: nil, completed: { (image, data, error, success) in
                                     guard error == nil else {
