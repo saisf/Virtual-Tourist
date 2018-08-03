@@ -21,7 +21,6 @@ class PhotosCollectionViewCell: UICollectionViewCell  {
     }
     
     // MARK: Cell Configuration
-    
     func configureCell(image: Data?) {
         if let imageData = image {
             activityIndicatorView.stopAnimating()

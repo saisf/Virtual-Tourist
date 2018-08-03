@@ -19,6 +19,7 @@
 		EC5901FB20CF267400CA3388 /* FlickrAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC5901FA20CF267400CA3388 /* FlickrAPI.swift */; };
 		EC5901FD20CF2E3D00CA3388 /* FlickrConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC5901FC20CF2E3D00CA3388 /* FlickrConstants.swift */; };
 		EC5901FF20D0704400CA3388 /* FlickrPhotosData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC5901FE20D0704400CA3388 /* FlickrPhotosData.swift */; };
+		ECA98B7E2114FDD60005CFB8 /* CoreDataEntitiesGeneration.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA98B7D2114FDD60005CFB8 /* CoreDataEntitiesGeneration.swift */; };
 		ECF0ADEF20D1CB2300FB9AFE /* PhotosCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF0ADEE20D1CB2300FB9AFE /* PhotosCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
@@ -39,6 +40,7 @@
 		EC5901FA20CF267400CA3388 /* FlickrAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlickrAPI.swift; sourceTree = "<group>"; };
 		EC5901FC20CF2E3D00CA3388 /* FlickrConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlickrConstants.swift; sourceTree = "<group>"; };
 		EC5901FE20D0704400CA3388 /* FlickrPhotosData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlickrPhotosData.swift; sourceTree = "<group>"; };
+		ECA98B7D2114FDD60005CFB8 /* CoreDataEntitiesGeneration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataEntitiesGeneration.swift; sourceTree = "<group>"; };
 		ECF0ADEE20D1CB2300FB9AFE /* PhotosCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -112,6 +114,7 @@
 				EC5901F820CF179D00CA3388 /* DestinationCoordinates.swift */,
 				EC5901FE20D0704400CA3388 /* FlickrPhotosData.swift */,
 				EC5901E020C9A64800CA3388 /* Virtual_Tourist.xcdatamodeld */,
+				ECA98B7D2114FDD60005CFB8 /* CoreDataEntitiesGeneration.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -270,6 +273,7 @@
 				EC5901F620CF160E00CA3388 /* PhotosViewController.swift in Sources */,
 				EC5901FF20D0704400CA3388 /* FlickrPhotosData.swift in Sources */,
 				EC5901FD20CF2E3D00CA3388 /* FlickrConstants.swift in Sources */,
+				ECA98B7E2114FDD60005CFB8 /* CoreDataEntitiesGeneration.swift in Sources */,
 				ECF0ADEF20D1CB2300FB9AFE /* PhotosCollectionViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -16,7 +16,6 @@ class PhotosViewController: UIViewController, MKMapViewDelegate, UICollectionVie
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var newPhotosAndDeletingLabels: UIButton!
-    
     var manager: SDWebImageManager = SDWebImageManager.shared()
     var manageObjectContext: NSManagedObjectContext?
     var downloadedPhotos: [Photo]?
@@ -54,7 +53,6 @@ class PhotosViewController: UIViewController, MKMapViewDelegate, UICollectionVie
         mapView.setRegion(region, animated: true)
     }
     
-    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
         var photos: [Photo]?
@@ -72,10 +70,8 @@ class PhotosViewController: UIViewController, MKMapViewDelegate, UICollectionVie
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectionCell", for: indexPath) as! PhotosCollectionViewCell
-//        cell.contentView.backgroundColor = UIColor.darkGray
-//        cell.collectionImage.sd_setIndicatorStyle(.gray)
-//        cell.collectionImage.sd_addActivityIndicator()
         var photos: [Photo]?
         var photo: Photo?
             do {
@@ -88,6 +84,7 @@ class PhotosViewController: UIViewController, MKMapViewDelegate, UICollectionVie
                         if let photos = photos {
                             let sortedPhotos = photos.sorted{ $0.url! < $1.url! }
                             self.downloadedPhotos = sortedPhotos
+
                             photo = sortedPhotos[indexPath.row]
                         }
                     }
@@ -100,13 +97,9 @@ class PhotosViewController: UIViewController, MKMapViewDelegate, UICollectionVie
         }
         DispatchQueue.main.async {
             if let image = photo?.image {
-//            cell.collectionImage.sd_removeActivityIndicator()
-//            cell.collectionImage.image = UIImage(data: (photo?.image)!)
                 cell.configureCell(image: image)
             }
         }
-        print("Collection cell successful")
-        
         return cell
         
     }
@@ -157,7 +150,7 @@ class PhotosViewController: UIViewController, MKMapViewDelegate, UICollectionVie
                 deletingPhotos = [Photo]()
 
             } catch {
-                print("Something wrong to delete photos")
+                print("Core data deleting photos unsuccessfully")
             }
         } else {
             manageObjectContext?.delete(deletingPin)
@@ -173,47 +166,19 @@ class PhotosViewController: UIViewController, MKMapViewDelegate, UICollectionVie
                     print("Error: \(error!)")
                     return
                 }
-                
                 if firstSuccess == true {
-                    guard let photos = photos else {return}
-                    ViewController.shared.generateURLFromPhotos(photos: photos, completion: { (secondSuccess, urls) in
-                        //                        print(urls)
-                        if secondSuccess == true {
+                    guard let photos = photos else {
+                        print("Downloaded photos are nil")
+                        return
+                    }
+                    CoreDataEntities.sharedInstance.generateURLFromPhotos(photos: photos, completion: { (success, urls) in
+                        if success {
                             guard let urls = urls else {
+                                print("Downloaded urls are nil")
                                 return
                             }
-                            let pinEntity = NSEntityDescription.entity(forEntityName: "Pin", in: self.manageObjectContext!)
-                            let pin = Pin(entity: pinEntity!, insertInto: self.manageObjectContext)
-                            pin.latitude = DestinationCoordinates.latitude
-                            pin.longitude = DestinationCoordinates.longitude
-                            for url in urls {
-                                self.manager.imageDownloader?.downloadImage(with: url, options: .highPriority, progress: nil, completed: { (image, data, error, success) in
-                                    guard error == nil else {
-                                        return
-                                    }
-                                    guard let image = image else {
-                                        return
-                                    }
-                                    guard let data = UIImagePNGRepresentation(image) else {
-                                        print("Can't convert image to data to be saved for core data Photo")
-                                        return
-                                    }
-                                    
-                                    do {
-                                        let photoEntity = NSEntityDescription.entity(forEntityName: "Photo", in: self.manageObjectContext!)
-                                        let photo = Photo(entity: photoEntity!, insertInto: self.manageObjectContext)
-                                        photo.image = data
-                                        photo.url = url.absoluteString
-                                        pin.addToPhotos(photo)
-                                        try self.manageObjectContext?.save()
-                                        self.collectionView.reloadData()
-                                        print("Work out")
-                                    } catch  {
-                                        print("NOT working out")
-                                    }
-                                    print("Image data saved successful")
-                                })
-                            }
+                            guard let manageObjectContext = self.manageObjectContext else {return}
+                            CoreDataEntities.sharedInstance.generateCoreDataPhotosEntity(urls: urls, latitude: DestinationCoordinates.latitude, longitude: DestinationCoordinates.longitude, manageObjectContext: manageObjectContext, collectionView: self.collectionView)
                         }
                     })
                 }
@@ -233,17 +198,6 @@ class PhotosViewController: UIViewController, MKMapViewDelegate, UICollectionVie
         let height = width
         return CGSize(width: width, height: height)
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
+
 
