@@ -23,12 +23,9 @@ class PhotosCollectionViewCell: UICollectionViewCell  {
     // MARK: Cell Configuration
     func configureCell(image: Data?) {
         if let imageData = image {
-            activityIndicatorView.stopAnimating()
             collectionImage.image = UIImage(data: imageData)
         } else {
             collectionImage.image = nil
-            backgroundColor = UIColor.gray
-            activityIndicatorView.startAnimating()
         }
     }
 }

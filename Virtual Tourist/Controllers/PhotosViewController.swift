@@ -11,7 +11,7 @@ import MapKit
 import SDWebImage
 import CoreData
 
-class PhotosViewController: UIViewController, MKMapViewDelegate, UICollectionViewDataSource,UICollectionViewDelegate, UICollectionViewDelegateFlowLayout  {
+class PhotosViewController: UIViewController, MKMapViewDelegate, UICollectionViewDataSource,UICollectionViewDelegate, UICollectionViewDelegateFlowLayout{
     
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var collectionView: UICollectionView!
@@ -54,54 +54,55 @@ class PhotosViewController: UIViewController, MKMapViewDelegate, UICollectionVie
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        
-        var photos: [Photo]?
-        do {
-            let request: NSFetchRequest<Pin> = Pin.fetchRequest()
-            request.predicate = NSPredicate(format: "latitude CONTAINS \(DestinationCoordinates.latitude) AND longitude CONTAINS \(DestinationCoordinates.longitude)")
-            let results = try manageObjectContext?.fetch(request) as! [Pin]
-            guard let firstResult = results.first else {return 0}
-            deletingPin = firstResult
-            photos = firstResult.photos?.allObjects as! [Photo]
-        } catch {
-            fatalError("Error in retrieving Pin item")
-        }
-        return photos?.count ?? 0
+        return 21
     }
+    
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectionCell", for: indexPath) as! PhotosCollectionViewCell
         var photos: [Photo]?
         var photo: Photo?
+        cell.contentView.backgroundColor = UIColor.darkGray
+        cell.collectionImage.sd_setIndicatorStyle(.gray)
+        cell.collectionImage.sd_addActivityIndicator()
+
             do {
+                let epsilon = 0.000000001;
                 let request: NSFetchRequest<Pin> = Pin.fetchRequest()
-                request.predicate = NSPredicate(format: "latitude CONTAINS \(DestinationCoordinates.latitude) AND longitude CONTAINS \(DestinationCoordinates.longitude)")
+                request.predicate = NSPredicate(format: "latitude > %lf AND latitude < %lf AND longitude > %lf AND longitude < %lf", DestinationCoordinates.latitude - epsilon, DestinationCoordinates.latitude + epsilon, DestinationCoordinates.longitude - epsilon, DestinationCoordinates.longitude + epsilon)
+                let sortDescriptor = NSSortDescriptor(key: "latitude", ascending: true)
+                request.sortDescriptors = [sortDescriptor]
                 let results = try self.manageObjectContext?.fetch(request)
                 if let results = results {
                     if let firstResult = results.first {
+                        deletingPin = firstResult
                         photos = firstResult.photos?.allObjects as? [Photo]
                         if let photos = photos {
                             let sortedPhotos = photos.sorted{ $0.url! < $1.url! }
                             self.downloadedPhotos = sortedPhotos
-
-                            photo = sortedPhotos[indexPath.row]
+                            if indexPath.row < sortedPhotos.count {
+                                photo = sortedPhotos[indexPath.row]
+                            }
                         }
                     }
                 }
             } catch {
                 fatalError("Error in retrieving Pin item")
             }
+        
         if deletingPhotos.count == 0 {
             cell.contentView.alpha = 1.0
         }
+        
         DispatchQueue.main.async {
             if let image = photo?.image {
+                cell.collectionImage.sd_removeActivityIndicator()
                 cell.configureCell(image: image)
+                cell.collectionImage.sd_removeActivityIndicator()
             }
         }
         return cell
-        
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

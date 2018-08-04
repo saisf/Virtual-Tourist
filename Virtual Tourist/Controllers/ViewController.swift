@@ -11,11 +11,11 @@ import MapKit
 import SDWebImage
 import CoreData
 
-class ViewController: UIViewController, MKMapViewDelegate {
+class ViewController: UIViewController {
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var edit: UIBarButtonItem!
     @IBOutlet weak var tapPinsLabel: UILabel!
-    static let shared = ViewController()
+//    static let shared = ViewController()
     var editingMode = false
     var manageObjectContext: NSManagedObjectContext?
     var photo: Photo?
@@ -158,10 +158,26 @@ class ViewController: UIViewController, MKMapViewDelegate {
         }
     }
     
+}
+
+// Mark: Make labels fade in/out
+extension UIView {
+    func fadeIn(duration: TimeInterval = 1.0, delay: TimeInterval = 0.0, completion: @escaping ((Bool) -> Void) = {(finished: Bool) -> Void in}) {
+        UIView.animate(withDuration: duration, delay: delay, options: UIViewAnimationOptions.curveEaseIn, animations: {self.alpha = 1.0}, completion: completion)
+    }
+    func fadeOut(duration: TimeInterval = 1.0, delay: TimeInterval = 0.0, completion: @escaping ((Bool) -> Void) = {(finished: Bool) -> Void in}) {
+        UIView.animate(withDuration: duration, delay: delay, options: UIViewAnimationOptions.curveEaseIn, animations: {self.alpha = 0.0}, completion: completion)
+    }
+
+}
+
+// MARK: Mapview configuration
+extension ViewController: MKMapViewDelegate {
+    
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         guard let latitude: Double = view.annotation?.coordinate.latitude else {return}
         guard let longitude: Double = view.annotation?.coordinate.longitude else {return}
-
+        
         if editingMode {
             self.mapView.removeAnnotation(view.annotation!)
             deleteCoreDataPin(latitude: latitude, longitude: longitude)
@@ -184,16 +200,6 @@ class ViewController: UIViewController, MKMapViewDelegate {
         }
         return pinView
     }
-}
-
-// Mark: Make labels fade in/out
-extension UIView {
-    func fadeIn(duration: TimeInterval = 1.0, delay: TimeInterval = 0.0, completion: @escaping ((Bool) -> Void) = {(finished: Bool) -> Void in}) {
-        UIView.animate(withDuration: duration, delay: delay, options: UIViewAnimationOptions.curveEaseIn, animations: {self.alpha = 1.0}, completion: completion)
-    }
-    func fadeOut(duration: TimeInterval = 1.0, delay: TimeInterval = 0.0, completion: @escaping ((Bool) -> Void) = {(finished: Bool) -> Void in}) {
-        UIView.animate(withDuration: duration, delay: delay, options: UIViewAnimationOptions.curveEaseIn, animations: {self.alpha = 0.0}, completion: completion)
-    }
-
+    
 }
 
