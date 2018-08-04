@@ -27,7 +27,6 @@ class ViewController: UIViewController {
         
         // MARK: Gesture recognizer to allow user to add pin when long pressed
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(addAnnotationOnLongPress(gesture:)))
-        longPressGesture.minimumPressDuration = 0.5
         mapView.addGestureRecognizer(longPressGesture)
         
         // MARK: Set map region
