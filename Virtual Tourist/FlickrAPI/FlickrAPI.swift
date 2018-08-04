@@ -48,7 +48,7 @@ struct APIClient {
             }
             if let jsonResults = try? JSONDecoder().decode(Stat.self, from: data) {
                 guard let totalPages = jsonResults.photos.pages else {return}
-                let pageLimit = min(totalPages, 40)
+                let pageLimit = min(totalPages, 4000/21)
                 let randomPage = Int(arc4random_uniform(UInt32(pageLimit))) + 1
                 self.displayImageFromFlickrRandom(withPageNumber: randomPage, completion: { (success, image, error) in
                     guard error == nil else {
