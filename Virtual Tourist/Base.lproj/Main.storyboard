@@ -148,6 +148,7 @@
                     </view>
                     <connections>
                         <outlet property="collectionView" destination="Ktg-fo-Q0w" id="lzC-UG-SRn"/>
+                        <outlet property="flowLayout" destination="nYg-Me-IJe" id="5bN-vs-y1z"/>
                         <outlet property="mapView" destination="hzT-BJ-MbI" id="WY6-3i-Y4o"/>
                         <outlet property="newPhotosAndDeletingLabels" destination="v8F-Nc-0KQ" id="9fg-p2-QcZ"/>
                     </connections>

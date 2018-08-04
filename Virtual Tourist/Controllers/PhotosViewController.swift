@@ -16,6 +16,7 @@ class PhotosViewController: UIViewController, MKMapViewDelegate, UICollectionVie
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var newPhotosAndDeletingLabels: UIButton!
+    @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
     var manager: SDWebImageManager = SDWebImageManager.shared()
     var manageObjectContext: NSManagedObjectContext?
     var downloadedPhotos: [Photo]?
@@ -28,6 +29,12 @@ class PhotosViewController: UIViewController, MKMapViewDelegate, UICollectionVie
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.allowsMultipleSelection = true
+        let space: CGFloat = 3.0
+        let dimension = (view.frame.size.width - (2 * space)) / 3.0
+        
+        flowLayout.minimumInteritemSpacing = space
+        flowLayout.minimumLineSpacing = space
+        flowLayout.itemSize = CGSize(width: dimension, height: dimension)
         newPhotosAndDeletingLabels.titleLabel?.textAlignment = .center
         
         // Disable user map interaction
@@ -192,12 +199,6 @@ class PhotosViewController: UIViewController, MKMapViewDelegate, UICollectionVie
         pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: nil)
         pinView?.canShowCallout = true
         return pinView
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = collectionView.bounds.width/3.17
-        let height = width
-        return CGSize(width: width, height: height)
     }
 }
 
